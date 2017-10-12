@@ -9,7 +9,8 @@ class ClientController < ApplicationController
   def set_user
     if current_user
       user_data = User.includes(:accounts).find(current_user.id)
-      gon.current_user = UserSerializer.new(user_data).as_json
+      user_data = UserSerializer.new(user_data).as_json
+      gon.current_user = user_data
     end
   end
 

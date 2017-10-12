@@ -1,0 +1,40 @@
+.container-fluid{"ng-controller"=>"DashboardCtrl"}
+  %h2
+    Подключенные биржи
+    %span
+      %a{"ng-click"=>"addNewAccount()"}
+        %i.fa.fa-plus-circle{"aria-hidden" => "true"}
+  .app-container
+    .row
+      .accounts-item.col-md-3{"ng-repeat"=>"account in accounts"}
+        .accounts-item-card{"ng-click"=>"editAccount(account)"}
+          %a{}
+            {{ account.provider }}
+          %span.actions{"ng-if"=>"false"}
+            %a{"ng-click" => "deleteAccount($index, account.id)", style: "color: red;"}
+              %i.fa.fa-times{"aria-hidden" => "true"}
+    %hr
+    .session-card.row{"ng-repeat"=>"session in sessions"}
+      .col-md-6
+        .session-card-header
+          %h5
+            {{session.date}}
+            %span
+              %button.btn{"ng-class"=>"session.status == 'completed' ? 'btn-success': 'btn-default'"}
+                {{session.status}}
+            %span.session-card-desc{"ng-if"=>"session.status.completed"}
+              {{session.buy_count}} buy, {{session.sell_count}} sell
+          %p
+      .col-md-6
+        .session-card-order{"ng-repeat"=>"order in session.orders | orderBy: '-id' "}
+          .session-card-order-header
+            %p{"ng-class"=>"order.type == 'buy' ? 'text-success' : 'text-danger'"}
+              %b {{order.type}}
+              %span
+                {{order.market}}
+              %span
+                quantity - {{order.quantity}}
+              %span{"ng-if"=>"session.status == 'completed' "}
+                price - {{order.price }}
+              %span{"ng-if"=>"session.status == 'completed' "}
+                commission - {{order.commission }}

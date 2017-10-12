@@ -1,0 +1,69 @@
+.modal-header
+  %h4.modal-title
+    {{account.id ? 'Редактирование' : 'Подключение биржи'}}
+
+.modal-body
+  %ul
+    %li{"ng-repeat"=>"(key, value) in errors", "style"=>"color: red;"}
+      {{key}} - {{value[0]}}
+  .row{"ng-class"=>"{'disabled': account.id}"}
+    .col-xs
+      .form-group
+        %label биржа
+        %select.form-control{"ng-model"=>"account.provider"}
+          %option{"ng-value"=>"'bittrex'"} Bittrex
+    .col-xs
+      .form-group
+        %label key
+        %input.form-control{"ng-model"=>"account.key"}
+    .col-xs
+      .form-group
+        %label secret
+        %input.form-control{"ng-model"=>"account.secret"}
+  .config{"ng-if"=>"account.template"}
+    %h5
+      %b
+        условия продажи
+    .row
+      .col-xs
+        .form-group
+          %label минимальный процент перед продажей
+          %input.form-control{"ng-model"=>"account.template.min_sell_percent_diff"}
+      .col-xs
+        .form-group
+          %label если актив упал на столько (%)
+          %input.form-control{"ng-model"=>"account.template.min_sell_percent_stop"}
+    %h5
+      %b
+        условия покупки
+    .row
+      .col-xs
+        .form-group
+          %label минимальная разница в сатоши
+          %input.form-control{"ng-model"=>"account.template.min_buy_sth_diff"}
+      .col-xs
+        .form-group
+          %label минимальная разница (%)
+          %input.form-control{"ng-model"=>"account.template.min_buy_percent_diff"}
+      .col-xs
+        .form-group
+          %label минимальная цена покупки (BTC)
+          %input.form-control{"ng-model"=>"account.template.min_buy_price"}
+    %h5
+      %b
+        остальное
+    .row
+      .col-xs
+        .form-group
+          %label минимальный объем рынка актива (BTC)
+          %input.form-control{"ng-model"=>"account.template.min_market_volume"}
+      .col-xs
+        .form-group
+          %label интервал между сессиями (cекунды)
+          %input.form-control{"ng-model"=>"account.template.interval"}
+.modal-footer
+  %button.btn.btn-success{"ng-if"=>"ui.needStart()", "ng-click"=>"start()"}
+    Запуск
+  %button.btn.btn-primary{"ng-if"=>"!account.id", "ng-click"=>"createAccount()"} Подключить
+  %button.btn.btn-primary{"ng-if"=>"account.id", "ng-click"=>"updateAccount()"} Обновить
+  %button.btn.btn-secondary{"ng-click"=>"closeModal()"} Закрыть

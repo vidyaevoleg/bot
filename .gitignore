@@ -1,0 +1,24 @@
+.DS_Store
+tmp
+log
+npm-debug.log
+/config/oauth.yml
+/config/secrets.yml
+/config/redis.yml
+/config/sidekiq.yml
+/config/moy_sklad.yml
+/public/uploads
+/vendor
+
+# Added by webpack-rails
+/bower_components
+/node_modules
+/public/webpack
+/public/assets
+
+config/settings.local.yml
+config/settings/
+
+config/settings.local.yml
+config/settings/*.local.yml
+config/environments/*.local.yml

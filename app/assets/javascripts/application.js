@@ -28,4 +28,3 @@
 //= require_tree ./client/templates
 //= require_tree ./client/services
 //= require_tree ./client/controllers
-//= require_tree ./client/directives

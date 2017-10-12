@@ -2,7 +2,7 @@ working_directory '/var/www/bot/current'
 pid '/var/www/bot/current/tmp/pids/unicorn.pid'
 stderr_path '/var/www/bot/log/unicorn.log'
 stdout_path '/var/www/bot/log/unicorn.log'
-listen '/tmp/unicorn.buyandmine.ru.sock'
+listen '/tmp/unicorn.bot.sock'
 worker_processes 2
 timeout 30
 

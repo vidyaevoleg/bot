@@ -61,7 +61,7 @@ GEM
     bower-rails (0.11.0)
     builder (3.2.3)
     byebug (8.2.5)
-    capistrano (3.4.1)
+    capistrano (3.4.0)
       i18n
       rake (>= 10.0.0)
       sshkit (~> 1.3)

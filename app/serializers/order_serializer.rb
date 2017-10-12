@@ -1,4 +1,3 @@
 class OrderSerializer < ApplicationSerializer
-  attributes :id, :market, :price, :quantity, :type
-
+  attributes :id, :market, :price, :quantity, :type, :commission
 end

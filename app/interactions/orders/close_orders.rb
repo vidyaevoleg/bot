@@ -15,6 +15,8 @@ module Orders
           if session
             Orders::SaveOrder.run(account: account, session: session, uuid: order.uuid)
             session.add_count(order.type)
+          else
+            order.destroy
           end
         end
       end

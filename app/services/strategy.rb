@@ -69,6 +69,10 @@ class Strategy
           end
         end
       end
+    else
+      volume = wallet.available
+      rate = (summary.ask.to_d - STH.to_d).to_f
+      new_order(summary, 'sell', volume, rate) #ордер на продажу
     end
   end
 

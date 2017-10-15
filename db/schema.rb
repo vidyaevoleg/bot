@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171011222142) do
+ActiveRecord::Schema.define(version: 20171014182938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,11 +29,11 @@ ActiveRecord::Schema.define(version: 20171011222142) do
   add_index "account_sessions", ["account_id"], name: "index_account_sessions_on_account_id", using: :btree
 
   create_table "account_templates", force: :cascade do |t|
-    t.integer "min_market_volume"
-    t.integer "min_sell_percent_diff"
-    t.integer "min_sell_percent_stop"
-    t.integer "min_buy_sth_diff"
-    t.integer "min_buy_percent_diff"
+    t.decimal "min_market_volume"
+    t.decimal "min_sell_percent_diff"
+    t.decimal "min_sell_percent_stop"
+    t.decimal "min_buy_sth_diff"
+    t.decimal "min_buy_percent_diff"
     t.decimal "min_buy_price"
     t.integer "interval"
     t.integer "account_id"
@@ -62,6 +62,8 @@ ActiveRecord::Schema.define(version: 20171011222142) do
     t.integer  "account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "reason"
+    t.decimal  "profit"
   end
 
   add_index "orders", ["account_id"], name: "index_orders_on_account_id", using: :btree

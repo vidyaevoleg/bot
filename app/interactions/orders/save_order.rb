@@ -5,6 +5,7 @@ module Orders
     string :uuid
     object :account, class: Account
     object :session, class: Account::Session
+    integer :reason, default: nil
 
     def execute
       client = account.create_client
@@ -13,7 +14,7 @@ module Orders
       local_order = account.orders.find_by(uuid: uuid)
       local_order = account.orders.build unless local_order
 
-      local_order.assign_attributes(
+      attrs = {
         market: remote_order.market,
         quantity: remote_order.quantity,
         type: remote_order.type,
@@ -22,7 +23,11 @@ module Orders
         status: status,
         uuid: uuid,
         session_id: session.id,
-      )
+      }
+
+      attrs.merge!(reason: reason) if reason
+
+      local_order.assign_attributes(attrs)
       local_order.save!
     end
 

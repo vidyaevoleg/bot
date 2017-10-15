@@ -1,4 +1,6 @@
 class Account < ActiveRecord::Base
+  include WorkersHelper
+
   belongs_to :user
   enum provider: {bittrex: 0}
   has_one :template, class_name: Account::Template
@@ -20,5 +22,4 @@ class Account < ActiveRecord::Base
     raise "NO PROVIDER class account #{id}" unless klass
     klass
   end
-
 end

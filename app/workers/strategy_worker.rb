@@ -1,5 +1,4 @@
-class StrategyWorker
-  include Sidekiq::Worker
+class StrategyWorker < ApplicationWorker
 
   def perform(account_id)
     account = ::Account.find(account_id)

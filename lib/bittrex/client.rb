@@ -3,10 +3,7 @@ class Bittrex::Client < Client
   def get(path, params = {}, headers = {})
     nonce = Time.now.to_i
     hash = cache_key(path ,params, headers)
-    if cache[hash]
-      puts "FROM CACHE #{hash}".white
-      response = cache[hash]
-    else
+    result = Rails.cache.fetch(hash) do
       query = params.merge(apikey: key, nonce:nonce).to_query
       url = "#{host}/#{path}?#{query}"
       response = connection.get do |req|
@@ -18,9 +15,9 @@ class Bittrex::Client < Client
         end
       end
       puts "REQUEST #{hash}".blue
-      cache[hash] = response
+      response
     end
-    answer = JSON.parse(response.body)
+    answer = JSON.parse(result.body)
     unless answer['success']
       raise "#{answer['message']}"
     end

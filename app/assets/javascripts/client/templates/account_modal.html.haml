@@ -27,7 +27,7 @@
     .row
       .col-xs
         .form-group
-          %label минимальный процент перед продажей
+          %label минимальный процент перед продажей (%)
           %input.form-control{"ng-model"=>"account.template.min_sell_percent_diff"}
       .col-xs
         .form-group
@@ -37,18 +37,22 @@
       %b
         условия покупки
     .row
-      .col-xs
+      .col-xs-6
         .form-group
           %label минимальная разница в сатоши
           %input.form-control{"ng-model"=>"account.template.min_buy_sth_diff"}
-      .col-xs
+      .col-xs-6
         .form-group
           %label минимальная разница (%)
           %input.form-control{"ng-model"=>"account.template.min_buy_percent_diff"}
-      .col-xs
+      .col-xs-6
         .form-group
           %label минимальная цена покупки (BTC)
           %input.form-control{"ng-model"=>"account.template.min_buy_price"}
+      .col-xs-6
+        .form-group
+          %label процент, предотвращающий памп при покупке (%)
+          %input.form-control{"ng-model"=>"account.template.min_pump_risk_percent"}
     %h5
       %b
         остальное

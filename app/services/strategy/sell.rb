@@ -24,14 +24,21 @@ class Strategy::Sell
       if ((summary.ask.to_d - ::Strategy::STH.to_d) / last_price.to_d).to_f > min_difference # (ask + STH ) / last_price > на заданный процент
         yield(summary, 'sell', order_volume, order_rate, Order.reasons[:profit]) # ордер на продажу
       elsif (last_buy_order.price.to_d / summary.ask.to_d) > max_difference.to_d # цена уменьшилась на этот процент
+        to_black_list(summary.market)
         yield(summary, 'sell', order_volume, order_rate, Order.reasons[:stop_loss]) #ордер на продажу
       end
     else
+      to_black_list(summary.market)
       yield(summary, 'sell', order_volume, order_rate, Order.reasons[:too_long]) #ордер на продажу
     end
   end
 
   private
+
+  def to_black_list(market_name)
+    cache_key = "black_list_#{market_name}"
+    Rails.cache.write(cache_key, 'yes', expires_in: 24.hours)
+  end
 
   def order_volume
     wallet.available

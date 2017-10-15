@@ -16,7 +16,7 @@ module Orders
       @remote_order = client.orders.find(uuid)
 
       local_order = account.orders.find_by(uuid: uuid)
-      local_order = account.orders.build unless local_order
+      local_order ||= account.orders.build
 
       attrs = {
         market: remote_order.market,
@@ -28,6 +28,8 @@ module Orders
         uuid: uuid,
         session_id: session.id,
         profit: profit,
+        created_at: remote_order.executed_at,
+        closed_at: remote_order.closed
       }
 
       options.each do |key, value|

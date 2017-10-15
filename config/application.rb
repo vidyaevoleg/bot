@@ -26,5 +26,7 @@ module Bot
     config.cache_store = :redis_store, Pathname(Settings.reload!.redis_url).join('cache').to_s, { expires_in: 90.minutes }
     config.active_record.raise_in_transactional_callbacks = true
     config.angular_templates.markups.push('haml')
+    # config.time_zone = 'Moscow'
+    # config.active_record.default_timezone = 'Moscow'
   end
 end

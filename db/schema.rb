@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171015151834) do
+ActiveRecord::Schema.define(version: 20171015215957) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,7 @@ ActiveRecord::Schema.define(version: 20171015151834) do
     t.decimal "min_buy_price"
     t.integer "interval"
     t.integer "account_id"
+    t.decimal "min_pump_risk_percent", default: 5.0
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree
@@ -66,6 +67,7 @@ ActiveRecord::Schema.define(version: 20171015151834) do
     t.decimal  "profit"
     t.decimal  "spread"
     t.decimal  "volume"
+    t.datetime "closed_at"
   end
 
   add_index "orders", ["account_id"], name: "index_orders_on_account_id", using: :btree

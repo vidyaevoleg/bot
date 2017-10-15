@@ -63,7 +63,7 @@ class Strategy
       end
     else
       if session.buy_count <= max_buy_deals_count
-        Strategy::Buy.new(summary, account).call do |*args|
+        Strategy::Buy.new(summary, account, orders).call do |*args|
           new_order(*args)
         end
       end

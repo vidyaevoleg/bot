@@ -7,6 +7,7 @@ module Accounts
     decimal :min_buy_percent_diff
     decimal :min_buy_sth_diff
     decimal :min_buy_price
+    decimal :min_pump_risk_percent
     integer :interval
 
     def execute

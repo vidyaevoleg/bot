@@ -47,7 +47,7 @@ class Strategy
   def fix(summary)
     wallet = summary.wallet
     if wallet && wallet.available_btc > 0 && wallet.available_btc < MIN_TRADE_VOLUME
-      if session.buy_count < max_buy_deals_count
+      if session.buy_count <= max_buy_deals_count
         Strategy::BuyMore.new(summary, account).call do |*args|
           new_order(*args)
         end
@@ -62,7 +62,7 @@ class Strategy
         new_order(*args)
       end
     else
-      if session.buy_count < max_buy_deals_count
+      if session.buy_count <= max_buy_deals_count
         Strategy::Buy.new(summary, account).call do |*args|
           new_order(*args)
         end
@@ -93,7 +93,10 @@ class Strategy
       type: type,
       volume: volume,
       price: price,
-      reason: reason
+    }, {
+      reason: reason,
+      volume: summary.base_volume,
+      spread: summary.spread
     })
   end
 

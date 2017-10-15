@@ -5,7 +5,11 @@ module Orders
     string :uuid
     object :account, class: Account
     object :session, class: Account::Session
-    integer :reason, default: nil
+    hash :options, default: {} do
+      integer :reason, default: nil
+      decimal :spread, default: nil
+      decimal :volume, default: nil
+    end
 
     def execute
       client = account.create_client
@@ -23,15 +27,33 @@ module Orders
         status: status,
         uuid: uuid,
         session_id: session.id,
+        profit: profit,
       }
 
-      attrs.merge!(reason: reason) if reason
+      options.each do |key, value|
+        attrs.merge!(Hash[key, value]) if value
+      end
 
       local_order.assign_attributes(attrs)
       local_order.save!
     end
 
     private
+
+    def profit
+      if remote_order.type == 'sell' && remote_order.closed
+        last_buy_order = Order.where(
+          account_id: account.id,
+          type: 'buy',
+          quantity: remote_order.quantity,
+          market: remote_order.market
+        ).last
+        if last_buy_order
+          margin = (remote_order.price - last_buy_order.price) * remote_order.quantity
+          margin - remote_order.commission.to_f.to_d - last_buy_order.commission.to_f.to_d
+        end
+      end
+    end
 
     def status
       remote_order.closed.present? ? Order.statuses['completed'] : Order.statuses['pending']

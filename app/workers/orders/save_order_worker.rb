@@ -8,7 +8,7 @@ module Orders
         account: account,
         session: session,
         uuid: uuid,
-        reason: options.with_indifferent_access[:reason]
+        options: options.with_indifferent_access
       )
     end
 

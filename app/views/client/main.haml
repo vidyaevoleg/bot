@@ -33,10 +33,17 @@
               %span
                 {{order.market}}
               %span
-                quantity - {{order.quantity}}
+                | quantity - {{order.quantity}}
               %span{"ng-if"=>"session.status == 'completed' "}
-                price - {{order.price }}
+                | price - {{order.price }} |
               %span{"ng-if"=>"session.status == 'completed' "}
-                commission - {{order.commission }}
+                | commission - {{order.commission }} |
+              %span{}
+                | spread - {{order.spread}}
+              %span{}
+                | volume - {{order.volume}} |
+            %p
+              %span.text-success{"ng-if"=>"session.status == 'completed' && order.type == 'sell' && order.profit"}
+                | profit - {{ order.profit }}
               %span
-                reason - {{order.reason }}
+                | reason - {{order.reason }}

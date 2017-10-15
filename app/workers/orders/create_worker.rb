@@ -1,6 +1,6 @@
 module Orders
   class CreateWorker < ::ApplicationWorker
-    # sidekiq_options retry: false, backtrace: true
+    sidekiq_options retry: false, backtrace: true
 
     def perform(account_id, session_id, params={}, options)
       params = params.with_indifferent_access

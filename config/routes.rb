@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   root 'client#main'
 
   controller :client do
-    get 'check_order'
+    get 'download'
   end
 
   namespace :api, defaults: {format: :json} do

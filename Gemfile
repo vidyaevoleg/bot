@@ -24,7 +24,7 @@ gem 'responders'
 gem 'memoist'
 gem 'gon'
 gem 'active_interaction', '~> 3.4'
-
+gem 'spreadsheet_architect'
 gem 'sass-rails', '~> 5.0'
 gem 'jquery-rails'
 gem 'colorize'

@@ -96,7 +96,10 @@ class Strategy
     }, {
       reason: reason,
       volume: summary.base_volume,
-      spread: summary.spread
+      spread: summary.spread,
+      sell_count: summary.sell_count,
+      buy_count: summary.buy_count,
+      yesterday_price: summary.yesterday_price
     })
   end
 

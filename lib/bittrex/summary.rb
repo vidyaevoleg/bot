@@ -1,6 +1,6 @@
 class Bittrex::Summary < ::Bittrex::Base
   attr_reader :market, :high, :low, :volume, :last, :base_volume, :raw, :created_at,
-    :ask, :bid, :buy_count, :sell_count
+    :ask, :bid, :buy_count, :sell_count, :yesterday_price
 
   attr_accessor :wallet
 
@@ -18,7 +18,8 @@ class Bittrex::Summary < ::Bittrex::Base
     @ask = attrs['Ask']
     @buy_count = attrs['OpenBuyOrders']
     @sell_count = attrs['OpenSellOrders']
-    @raw = attrs
+    @raw = attrs["PrevDay"]
+    @yesterday_price = attrs["Prev"]
     @created_at  = Time.parse(attrs['TimeStamp'])
   end
 

@@ -1,6 +1,7 @@
 class OrderSerializer < ApplicationSerializer
   attributes :id, :market, :price, :quantity, :type,
-    :commission, :reason, :profit, :volume, :spread
+    :commission, :reason, :profit, :volume, :spread,
+    :sell_count, :buy_count, :yesterday_price
 
   def spread
     object.spread && object.spread.round(6) * 100

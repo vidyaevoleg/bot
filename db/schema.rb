@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171015215957) do
+ActiveRecord::Schema.define(version: 20171016190309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20171015215957) do
     t.decimal  "price"
     t.decimal  "commission"
     t.string   "uuid"
-    t.integer  "status",     default: 0
+    t.integer  "status",          default: 0
     t.integer  "session_id"
     t.integer  "account_id"
     t.datetime "created_at"
@@ -68,6 +68,9 @@ ActiveRecord::Schema.define(version: 20171015215957) do
     t.decimal  "spread"
     t.decimal  "volume"
     t.datetime "closed_at"
+    t.integer  "sell_count"
+    t.integer  "buy_count"
+    t.decimal  "yesterday_price"
   end
 
   add_index "orders", ["account_id"], name: "index_orders_on_account_id", using: :btree

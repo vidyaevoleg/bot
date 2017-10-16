@@ -45,10 +45,11 @@ class Bittrex::Wallet < ::Bittrex::Base
     elsif usd?
       0
     else
-      unless summary
-        raise "NO summary FOR #{sign}"
+      if summary
+        sum * summary.last
+      else
+        0
       end
-      sum * summary.last
     end
   end
 end

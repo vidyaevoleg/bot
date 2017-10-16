@@ -19,7 +19,11 @@ class Order < ActiveRecord::Base
       ['Commission', commission],
       ['Reason', reason],
       ['Market volume', volume],
-      ['Spread', spread]
+      ['Spread', spread],
+      ['BTC value', quantity.to_f * price.to_f],
+      ['Sell count', sell_count ],
+      ['Buy count', buy_count],
+      ['Yesterday price', yesterday_price]
     ]
   end
 

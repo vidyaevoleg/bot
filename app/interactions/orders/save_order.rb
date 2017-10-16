@@ -9,6 +9,9 @@ module Orders
       integer :reason, default: nil
       decimal :spread, default: nil
       decimal :volume, default: nil
+      decimal :yesterday_price, default: nil
+      integer :sell_count, default: nil
+      integer :buy_count, default: nil
     end
 
     def execute

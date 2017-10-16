@@ -8,7 +8,6 @@
     = csrf_meta_tags
     = Gon::Base.render_data
   %body{"ng-app"=>"robot"}
-    .container{"ng-controller"=>"AppCtrl"}
-      = render partial: 'layouts/header'
-      .app
-        = yield
+    = render partial: 'layouts/header'
+    .app{"ng-controller"=>"AppCtrl"}
+      = yield

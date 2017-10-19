@@ -274,6 +274,8 @@ GEM
       activesupport (>= 3.0)
       builder (>= 3.0)
       rubyzip (>= 1.0)
+    rollbar (2.15.4)
+      multi_json
     rspec-activemodel-mocks (1.0.3)
       activemodel (>= 3.0)
       activesupport (>= 3.0)
@@ -405,6 +407,7 @@ DEPENDENCIES
   redis-rails
   responders
   rest-client
+  rollbar
   rspec-activemodel-mocks
   rspec-rails (~> 3.0)
   sass-rails (~> 5.0)

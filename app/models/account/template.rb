@@ -1,5 +1,7 @@
 class Account::Template < ActiveRecord::Base
   belongs_to :account
+  serialize :black_list, Array
+  serialize :white_list, Array
 
   DEFAULT = {
     min_market_volume: 20,

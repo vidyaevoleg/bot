@@ -36,8 +36,9 @@ class Strategy::Sell
   private
 
   def to_black_list(market_name)
-    cache_key = "black_list_#{market_name}"
-    Rails.cache.write(cache_key, 'yes', expires_in: 24.hours)
+    settings.black_list = settings.black_list.push(market_name)
+    settings.save!
+    ::Accounts::UpdateBlackListWorker.perform_in(12.hours, account.id, market_name)
   end
 
   def order_volume

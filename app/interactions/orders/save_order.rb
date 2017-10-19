@@ -19,7 +19,7 @@ module Orders
       @remote_order = client.orders.find(uuid)
 
       local_order = account.orders.find_by(uuid: uuid)
-      local_order ||= account.orders.build
+      local_order ||= account.orders.build unless local_order
 
       attrs = {
         market: remote_order.market,
@@ -31,13 +31,14 @@ module Orders
         uuid: uuid,
         session_id: session.id,
         profit: profit,
-        created_at: remote_order.executed_at,
-        closed_at: remote_order.closed
+        closed_at: remote_order.closed_at
       }
 
       options.each do |key, value|
         attrs.merge!(Hash[key, value]) if value
       end
+
+      attrs.merge!(chain_id: chain_id) unless completed?
 
       local_order.assign_attributes(attrs)
       local_order.save!
@@ -46,11 +47,10 @@ module Orders
     private
 
     def profit
-      if remote_order.type == 'sell' && remote_order.closed
+      if remote_order.type == 'sell' && remote_order.closed_at
         last_buy_order = Order.where(
           account_id: account.id,
           type: 'buy',
-          quantity: remote_order.quantity,
           market: remote_order.market
         ).last
         if last_buy_order
@@ -60,9 +60,27 @@ module Orders
       end
     end
 
-    def status
-      remote_order.closed.present? ? Order.statuses['completed'] : Order.statuses['pending']
+    def completed?
+      remote_order.closed_at
     end
 
+    def chain_id
+      return unless options[:reason]
+      reason = ::Order.reasons.invert[options[:reason]].to_sym
+      if [:future].include?(reason)
+        generate_chain_id
+      elsif [:stop_loss, :too_long, :buy_more, :profit].include?(reason)
+        last_buy_order = account.orders.where(type: 'buy', market: remote_order.market).last
+        last_buy_order.chain_id if last_buy_order
+      end
+    end
+
+    def status
+      completed? ? Order.statuses['completed'] : Order.statuses['pending']
+    end
+
+    def generate_chain_id
+      Digest::MD5.hexdigest(Time.now.to_s)
+    end
   end
 end

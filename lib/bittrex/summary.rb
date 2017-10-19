@@ -19,7 +19,7 @@ class Bittrex::Summary < ::Bittrex::Base
     @buy_count = attrs['OpenBuyOrders']
     @sell_count = attrs['OpenSellOrders']
     @raw = attrs["PrevDay"]
-    @yesterday_price = attrs["PrevDay"]
+    @yesterday_price = attrs["PrevDay"].to_f.round(8)
     @created_at  = Time.parse(attrs['TimeStamp'])
   end
 

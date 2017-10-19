@@ -29,6 +29,16 @@
       .col-md-9
         .session-card-order{"ng-repeat"=>"order in session.orders | orderBy: '-id' "}
           .session-card-order-header
+            %p
+              %span
+                %b
+                  id
+                {{order.id}}
+              %span
+                %b
+                  chain_id
+                {{order.chain_id}}
+
             %p{"ng-class"=>"order.type == 'buy' ? 'text-success' : 'text-danger'"}
               %b {{order.type}}
               %span
@@ -42,7 +52,7 @@
               %span
                 | sell_count - {{order.buy_count }}
               %span
-                | yesterday_price - {{order.yesterday_price }}              
+                | yesterday_price - {{order.yesterday_price }}
             %p{"ng-if"=>"session.status == 'completed'"}
               %span{"ng-if"=>"order.type == 'sell' && order.profit", "ng-class"=>"order.profit > 0 ? 'text-success' : 'text-danger'"}
                 %b

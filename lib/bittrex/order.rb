@@ -1,19 +1,28 @@
 class Bittrex::Order < ::Bittrex::Base
   attr_reader :type, :id, :market, :price, :quantity, :remaining,
-    :total, :fill, :executed_at, :raw, :closed, :commission
+    :total, :fill, :executed_at, :raw, :closed_at, :commission, :attrs
 
   def initialize(attrs = {})
+    @attrs = attrs
     @id = attrs['Id'] || attrs['OrderUuid']
     @type = (attrs['Type'] || attrs['OrderType']).to_s.split('_').last.downcase
     @market = attrs['Exchange']
-    @quantity = attrs['Quantity']
-    @remaining = attrs['QuantityRemaining']
+    @quantity = quantity
     @price = attrs['PricePerUnit']
-    @total = attrs['Total']
     @commission = attrs['CommissionPaid'] || attrs['CommissionReserved']
-    @raw = attrs
-    @executed_at = attrs['TimeStamp'] && Time.parse(attrs['TimeStamp'])
-    @closed = attrs['Closed'] && Time.parse(attrs['Closed'])
+    @closed_at = attrs['Closed'] && Time.parse(attrs['Closed'])
+  end
+
+  def quantity
+    attrs['Quantity'] - attrs['QuantityRemaining']
+  end
+
+  def part?
+    attrs['QuantityRemaining'] > 0
+  end
+
+  def full
+    self.class.find(id)
   end
 
   class << self

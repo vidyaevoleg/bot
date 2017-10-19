@@ -44,8 +44,7 @@ class Strategy::Buy
   end
 
   def in_black_list?(market_name)
-    cache_key = "black_list_#{market_name}"
-    Rails.cache.read(cache_key)
+    settings.black_list.include?(market_name)
   end
 
   def order_rate

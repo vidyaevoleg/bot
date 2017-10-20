@@ -9,24 +9,20 @@ class Strategy
     :settings,
     :session
 
+  attr_accessor :used_balance
+
   STH = 0.00000001
   MIN_TRADE_VOLUME = 0.0005
-  # CONFIG = {
-  #   percent: 1, #yyyy # когда ask + STH больше последней цены покупки на этот процент
-  #   min_volume: 20, #yn # минимальный объем рынка монеты в БТС необходимый для входа на покупку
-  #   min_sth: 100, #yny # минималное кол-во STH в разнице (ask - STH) - (bid + STH) для покупки
-  #   min_percent: 2, #yny # процент для этой разницы,
-  #   min_price: 0.0006, # минимальная цена покупки в BTC,
-  #   max_sell_percent: 7 # минимальный процент убытка перед продажей
-  # }
 
   def initialize(account)
     account.clear_workers
+    @used_balance = 0.0
     @settings = account.template
     @account = account
     @client = account.create_client
     close_orders
-    @summaries = client.summaries.btc.sort_by(&:spread).reverse
+    @summaries = get_summaries
+    save_coins
     @wallets = client.wallets.all
     @orders = client.orders.all
     keep_wallets
@@ -62,10 +58,8 @@ class Strategy
         new_order(*args)
       end
     else
-      if session.buy_count <= max_buy_deals_count
-        Strategy::Buy.new(summary, account, orders).call do |*args|
-          new_order(*args)
-        end
+      Strategy::Buy.new(summary, account, orders, used_balance, full_balance).call do |*args|
+        new_order(*args)
       end
     end
   end
@@ -86,8 +80,11 @@ class Strategy
 
   def new_order(summary, type, volume, price, reason = nil)
     sign = summary.market
-    session.buy_count += 1 if type == 'buy'
+    if type == 'buy'
+      @used_balance = @used_balance.to_f + volume * price
+    end
     puts "#{type} ордер  #{sign} по цене #{price} объемом #{volume} #{Time.zone.now} reason #{reason}".green
+    puts "USED BALANCE #{used_balance}".green
     ::Orders::CreateWorker.perform_async(account.id, session.id, {
       sign: sign,
       type: type,
@@ -104,6 +101,17 @@ class Strategy
   end
 
   private
+
+  def save_coins
+    Rails.cache.write(account.coins_cache_key, summaries.map(&:market))
+  end
+
+  def get_summaries
+    sums = client.summaries.btc
+    white_listed = sums.select {|s| settings.white_list.include?(s.market)}
+    by_spread = sums.sort {|s| s.spread }
+    (white_listed + by_spread).uniq
+  end
 
   def keep_wallets
     summaries.each do |summary|

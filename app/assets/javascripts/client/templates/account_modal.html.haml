@@ -53,6 +53,24 @@
         .form-group
           %label процент, предотвращающий памп при покупке (%)
           %input.form-control{"ng-model"=>"account.template.min_pump_risk_percent"}
+    .row
+      .col-xs-6
+        .form-group
+          %label
+            %b
+              вайт лист
+          %ui-select{:multiple => "multiple", "ng-model" => "account.template.white_list", "tagging-label"=>"(coin name)", :tagging => "", :theme => "bootstrap", :title => "Choose a coin"}
+            %ui-select-match{:placeholder => "select coin"} {{$item}}
+            %ui-select-choices{:repeat => "coin in account.template.coins | filter:$select.search"}
+              {{coin}}
+      .col-xs-6
+        .form-group
+          %label
+            %b блэк лист
+          %ui-select{:multiple => "multiple", "ng-model" => "account.template.black_list", :tagging => "", "tagging-label"=>"(coin name)", :theme => "bootstrap", :title => "Choose a coin"}
+            %ui-select-match{:placeholder => "select coin"} {{$item}}
+            %ui-select-choices{:repeat => "coin in account.template.coins | filter:$select.search"}
+              {{coin}}
     %h5
       %b
         остальное
@@ -65,6 +83,10 @@
         .form-group
           %label интервал между сессиями (cекунды)
           %input.form-control{"ng-model"=>"account.template.interval"}
+      .col-xs
+        .form-group
+          %label вайт лист коэффициент
+          %input.form-control{"ng-model"=>"account.template.white_list_coef"}
 .modal-footer
   %button.btn.btn-success{"ng-if"=>"ui.needStart()", "ng-click"=>"start()"}
     Запуск

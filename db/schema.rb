@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019170210) do
+ActiveRecord::Schema.define(version: 20171020091109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20171019170210) do
     t.decimal "min_pump_risk_percent", default: 5.0
     t.text    "black_list"
     t.text    "white_list"
+    t.decimal "white_list_coef"
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree

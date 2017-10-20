@@ -22,4 +22,8 @@ class Account < ActiveRecord::Base
     raise "NO PROVIDER class account #{id}" unless klass
     klass
   end
+
+  def coins_cache_key
+    "#{provider}_coins"
+  end
 end

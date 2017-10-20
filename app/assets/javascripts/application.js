@@ -18,6 +18,7 @@
 //= require lodash/dist/lodash
 //= require angular-rails-templates
 //= require angular-touch/angular-touch
+//= require angular-ui-select
 //= require angular-carousel/dist/angular-carousel.min
 //= require angularjs-slider/dist/rzslider.js
 //= require angularUtils-pagination/dirPagination.js

@@ -44,7 +44,10 @@ module Api
         :min_buy_sth_diff,
         :min_buy_price,
         :min_pump_risk_percent,
-        :interval
+        :interval,
+        :white_list_coef,
+        black_list: [],
+        white_list: []
       )
     end
 

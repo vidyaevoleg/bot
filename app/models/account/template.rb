@@ -10,7 +10,8 @@ class Account::Template < ActiveRecord::Base
     min_buy_sth_diff: 100,
     min_buy_percent_diff: 2,
     min_buy_price: 0.0006,
-    interval: 180
+    interval: 180,
+    white_list_coef: 2.0
   }
 
   def self.create_default(options = {})

@@ -6,5 +6,13 @@ class AccountTemplateSerializer < ApplicationSerializer
     :min_buy_percent_diff,
     :min_buy_price,
     :min_pump_risk_percent,
-    :interval
+    :interval,
+    :white_list_coef,
+    :black_list,
+    :white_list,
+    :coins
+
+  def coins
+    Rails.cache.read(object.account.coins_cache_key)
+  end
 end

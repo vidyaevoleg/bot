@@ -8,6 +8,9 @@ module Accounts
     decimal :min_buy_sth_diff
     decimal :min_buy_price
     decimal :min_pump_risk_percent
+    decimal :white_list_coef
+    array :white_list, default: []
+    array :black_list, default: []
     integer :interval
 
     def execute

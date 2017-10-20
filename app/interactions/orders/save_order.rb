@@ -80,7 +80,7 @@ module Orders
     end
 
     def generate_chain_id
-      Digest::MD5.hexdigest(Time.now.to_s)
+      Digest::MD5.hexdigest("#{Time.now.to_s}-#{remote_order.market}")
     end
   end
 end

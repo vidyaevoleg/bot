@@ -4,7 +4,8 @@ var APP = angular.module('robot', [
   'ngTouch',
   'angular-carousel',
   'angularUtils.directives.dirPagination',
-  'ui-notification'
+  'ui-notification',
+  'ui.select',
 ]);
 
 APP.config(['NotificationProvider', function(NotificationProvider) {

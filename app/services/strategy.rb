@@ -38,6 +38,7 @@ class Strategy
       start(summary)
     end
     perform_next_run
+    perform_check
   end
 
   def fix(summary)
@@ -122,6 +123,10 @@ class Strategy
 
   def perform_next_run
     StrategyWorker.perform_in(settings.interval.seconds, account.id)
+  end
+
+  def perform_check
+    Accounts::SessionCheckWorker.perform_in(30.seconds, session.id)
   end
 
   def close_orders

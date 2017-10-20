@@ -6,7 +6,7 @@ module Accounts
       settings = account.template
       new_black_list = settings.black_list
       new_black_list.delete(market_name)
-      settings.update(black_list: new_black_list)
+      settings.update(black_list: new_black_list.uniq)
     end
   end
 end

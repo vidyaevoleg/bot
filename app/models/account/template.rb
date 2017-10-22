@@ -49,7 +49,7 @@ class Account::Template < ActiveRecord::Base
   end
 
   def data
-    fields = DEFAULT.first[1].keys
+    fields = [DEFAULT.first[1].keys, :strategy, :currency].flatten
     fields.inject({}) do |_hash, field|
       _hash[field] = public_send(field)
       _hash

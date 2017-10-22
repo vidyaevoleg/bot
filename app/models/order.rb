@@ -35,7 +35,8 @@ class Order < ActiveRecord::Base
       ['min_buy_percent_diff', template_data[:min_buy_percent_diff]],
       ['min_buy_price', template_data[:min_buy_price]],
       ['white_list_coef', template_data[:white_list_coef]],
-      ['currency', template.currency]
+      ['currency', template_data[:currency]],
+      ['strategy', template_data[:strategy]]
     ]
 
     data

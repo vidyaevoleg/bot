@@ -1,7 +1,5 @@
 module Orders
   class CloseOrders < ::ApplicationInteraction
-    # set_callback :type_check, :before, -> { binding.pry }
-    # object :account, class: ::Account
     object :template, class: ::Account::Template
 
     def execute

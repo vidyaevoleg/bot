@@ -39,7 +39,7 @@ module Orders
       end
 
       attrs.merge!(chain_id: chain_id) unless completed?
-
+      attrs.merge!(template_data: template.data) if completed?
       local_order.assign_attributes(attrs)
       local_order.save!
     end

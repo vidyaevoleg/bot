@@ -1,8 +1,17 @@
 .container-fluid{"ng-controller"=>"AccountCtrl"}
-  %h2
-    Аккаунт #
-    {{account.id}}
+  .account-templates
+    .row
+      .col-xs-4
+        %h2
+          Аккаунт {{account.provider}} #
+          {{account.id}}
+      .account-templates-item.col-xs{"ng-repeat"=>"template in account.templates"}
+        %button.btn.btn-info{"ng-click"=>"editTemplate(template)"}
+          {{template.currency}}
+          %span.inline{"ng-class"=>"template.need_restart ? 'text-danger' : 'text-success'"}
+            {{template.need_restart ? 'off' : 'on'}}
   %hr
+
   .session-card.row{"ng-repeat"=>"session in sessions"}
     .col-md-3
       .session-card-header

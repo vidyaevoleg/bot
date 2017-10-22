@@ -5,17 +5,18 @@
         Подключенные биржи
         %a{"ng-click"=>"addNewAccount()"}
           %i.fa.fa-plus-circle{"aria-hidden" => "true"}
-    %hr
-    .account-items.row
+    .accounts-items.row
       .accounts-item.col-xs{"ng-repeat"=>"account in accounts"}
         .accounts-item-card
           .header
             %a{"href"=>"{{'/accounts/' + account.id }}"}
               {{ account.provider }}
-
           .templates.row
             .templates-item.col-xs-2{"ng-repeat"=>"template in account.templates"}
-              %button.btn.btn-info{"ng-click"=>"editTemplate(template)"} {{template.currency}}
+              %button.btn.btn-info{"ng-click"=>"editTemplate(template)"}
+                {{template.currency}}
+                %span.inline{"ng-class"=>"template.need_restart ? 'text-danger' : 'text-success'"}
+                  {{template.need_restart ? 'off' : 'on'}}
             .templates-item.col-xs-2
               %button.btn.btn-success{ "ng-click"=>"addNewTemplate(account)"}
                 %i.fa.fa-plus-circle{"aria-hidden" => "true"}

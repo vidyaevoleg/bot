@@ -8,7 +8,7 @@ APP.controller('DashboardCtrl', ['API', '$scope', 'modalService', function (API,
   // }
 
   $scope.addNewAccount = function () {
-    modalService.init('client/templates/account_modal.html', 'AccountModalCtrl', {});
+    modalService.init('client/templates/account_modal.html', 'AccountModalCtrl', {}, 'lg');
   };
 
   $scope.editAccount = function (account) {
@@ -18,7 +18,7 @@ APP.controller('DashboardCtrl', ['API', '$scope', 'modalService', function (API,
   $scope.addNewTemplate = function (account) {
     var example = Object.assign({}, account.templates[0]);
     example.id = null; example.currency = null; example.account_id = account.id;
-    modalService.init('client/templates/template_modal.html', 'TemplateModalCtrl', {template: example})
+    modalService.init('client/templates/template_modal.html', 'TemplateModalCtrl', {template: example}, 'lg')
   };
 
   $scope.editTemplate = function (template) {

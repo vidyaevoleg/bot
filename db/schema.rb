@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171022010048) do
+ActiveRecord::Schema.define(version: 20171022112158) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,7 @@ ActiveRecord::Schema.define(version: 20171022010048) do
     t.decimal  "yesterday_price"
     t.string   "chain_id"
     t.integer  "account_template_id"
+    t.text     "template_data"
   end
 
   add_index "orders", ["session_id"], name: "index_orders_on_session_id", using: :btree

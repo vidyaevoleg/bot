@@ -48,4 +48,12 @@ class Account::Template < ActiveRecord::Base
     "#{currency}_coins"
   end
 
+  def data
+    fields = DEFAULT.first[1].keys
+    fields.inject({}) do |_hash, field|
+      _hash[field] = public_send(field)
+      _hash
+    end
+  end
+
 end

@@ -1,5 +1,3 @@
-require 'colorize'
-# Sidekiq::Extensions.enable_delay!
 class Strategy
   attr_reader :client,
     :account,

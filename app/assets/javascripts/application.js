@@ -12,7 +12,6 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require angular/angular
 //= require angular-bootstrap/ui-bootstrap-tpls
 //= require lodash/dist/lodash

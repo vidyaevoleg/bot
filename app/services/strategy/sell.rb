@@ -1,51 +1,34 @@
-class Strategy::Sell
-  attr_reader :summary,
-    :wallet,
-    :last_buy_order,
-    :account,
-    :settings
-
-  def initialize(summary, account, orders)
-    @account = account
-    @settings = account.template
-    @summary = summary
-    @wallet = summary.wallet
-    @last_buy_order = orders.find do |order|
-      order.market == wallet.sign && order.buy?
-    end
-  end
+class Strategy::Sell < Strategy
 
   def call
-    if last_buy_order
-      last_price = last_buy_order.price # цена последнего ордера на покупку
-      min_difference = 1.to_f + (settings.min_sell_percent_diff.to_f / 100.to_f)
-      max_difference = 1.to_f + (settings.min_sell_percent_stop.to_f / 100.to_f)
+    summaries.each do |summary|
+      fix(summary)
+    end
+    summaries.each do |summary|
+      panic_sell(summary)
+    end
+    perform_next_run
+    perform_check
+    save_last_call
+  end
 
-      if ((summary.ask.to_d - ::Strategy::STH.to_d) / last_price.to_d).to_f > min_difference # (ask + STH ) / last_price > на заданный процент
-        yield(summary, 'sell', order_volume, order_rate, Order.reasons[:profit]) # ордер на продажу
-      elsif (last_buy_order.price.to_d / summary.ask.to_d) > max_difference.to_d # цена уменьшилась на этот процент
-        to_black_list(summary.market)
-        yield(summary, 'sell', order_volume, order_rate, Order.reasons[:stop_loss]) #ордер на продажу
+
+  def fix(summary)
+    wallet = summary.wallet
+    if wallet && wallet.available_currency(currency) > 0 && wallet.available_currency(currency) < MIN_TRADE_VOLUME
+      Actions::BuyMore.new(summary, template, used_balance, full_balance).call do |*args|
+        new_order(*args)
       end
-    else
-      to_black_list(summary.market)
-      yield(summary, 'sell', order_volume, order_rate, Order.reasons[:too_long]) #ордер на продажу
     end
   end
 
-  private
 
-  def to_black_list(market_name)
-    settings.black_list = settings.black_list.push(market_name)
-    settings.save!
-    ::Accounts::UpdateBlackListWorker.perform_in(12.hours, account.id, market_name)
-  end
-
-  def order_volume
-    wallet.available
-  end
-
-  def order_rate
-    (summary.ask.to_d - ::Strategy::STH.to_d).to_f
+  def panic_sell(summary)
+    wallet = summary.wallet
+    if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
+      Actions::PanicSell.new(summary, wallet).call do |*args|
+        new_order(*args)
+      end
+    end
   end
 end

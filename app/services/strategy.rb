@@ -3,22 +3,26 @@ require 'colorize'
 class Strategy
   attr_reader :client,
     :account,
+    :template,
     :wallets,
     :summaries,
     :orders,
     :settings,
-    :session
+    :session,
+    :currency
 
   attr_accessor :used_balance
 
   STH = 0.00000001
   MIN_TRADE_VOLUME = 0.0005
 
-  def initialize(account)
-    account.clear_workers
+  def initialize(template)
+    @template = template
+    @account = template.account
+    template.clear_workers
     @used_balance = 0.0
-    @settings = account.template
-    @account = account
+    @settings = template
+    @currency = settings.currency
     @client = account.create_client
     close_orders
     @summaries = get_summaries
@@ -27,7 +31,7 @@ class Strategy
     @orders = client.orders.all
     keep_wallets
     puts 'DATA FETCHED'.yellow
-    @session = account.sessions.create(buy_count: 0, sell_count: 0, payload: "")
+    @session = template.sessions.create(buy_count: 0, sell_count: 0, payload: "", strategy: template.strategy)
   end
 
   def call
@@ -39,27 +43,26 @@ class Strategy
     end
     perform_next_run
     perform_check
+    save_last_call
   end
 
   def fix(summary)
     wallet = summary.wallet
-    if wallet && wallet.available_btc > 0 && wallet.available_btc < MIN_TRADE_VOLUME
-      if session.buy_count <= max_buy_deals_count
-        Strategy::BuyMore.new(summary, account).call do |*args|
-          new_order(*args)
-        end
+    if wallet && wallet.available_currency(currency) > 0 && wallet.available_currency(currency) < MIN_TRADE_VOLUME
+      Actions::BuyMore.new(summary, template, used_balance, full_balance).call do |*args|
+        new_order(*args)
       end
     end
   end
 
   def start(summary)
     wallet = summary.wallet
-    if wallet && wallet.available_btc > MIN_TRADE_VOLUME
-      Strategy::Sell.new(summary, account, orders).call do |*args|
+    if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
+      Actions::Sell.new(summary, template, orders).call do |*args|
         new_order(*args)
       end
     else
-      Strategy::Buy.new(summary, account, orders, used_balance, full_balance).call do |*args|
+      Actions::Buy.new(summary, template, orders, used_balance, full_balance).call do |*args|
         new_order(*args)
       end
     end
@@ -68,11 +71,11 @@ class Strategy
   private
 
   def full_balance
-    btc_wallet.available
+    currency_wallet.available
   end
 
-  def btc_wallet
-    @_btc_wallet ||= wallets.find {|w| w.currency == 'BTC'}
+  def currency_wallet
+    @_currency_wallet ||= wallets.find {|w| w.currency == currency}
   end
 
   def max_buy_deals_count
@@ -86,7 +89,7 @@ class Strategy
     end
     puts "#{type} ордер  #{sign} по цене #{price} объемом #{volume} #{Time.zone.now} reason #{reason}".green
     puts "USED BALANCE #{used_balance}".green
-    ::Orders::CreateWorker.perform_async(account.id, session.id, {
+    ::Orders::CreateWorker.perform_async(settings.id, session.id, {
       sign: sign,
       type: type,
       volume: volume,
@@ -101,14 +104,12 @@ class Strategy
     })
   end
 
-  private
-
   def save_coins
-    Rails.cache.write(account.coins_cache_key, summaries.map(&:market))
+    Rails.cache.write(settings.coins_cache_key, summaries.map(&:market))
   end
 
   def get_summaries
-    sums = client.summaries.btc
+    sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}-")}
     white_listed = sums.select {|s| settings.white_list.include?(s.market)}
     by_spread = sums.sort {|s| s.spread }
     (white_listed + by_spread).uniq
@@ -116,13 +117,17 @@ class Strategy
 
   def keep_wallets
     summaries.each do |summary|
-      wallet = wallets.find { |w| w.sign == summary.market }
+      wallet = wallets.find { |w| w.sign(settings.currency) == summary.market }
       summary.wallet = wallet
     end
   end
 
+  def save_last_call
+    template.update!(last_time: Time.zone.now)
+  end
+
   def perform_next_run
-    StrategyWorker.perform_in(settings.interval.seconds, account.id)
+    StrategyWorker.perform_in(settings.interval.seconds, template.id)
   end
 
   def perform_check
@@ -130,6 +135,6 @@ class Strategy
   end
 
   def close_orders
-    Orders::CloseOrders.run!(account: account)
+    Orders::CloseOrders.run!(template: template)
   end
 end

@@ -7,7 +7,7 @@ class ClientController < ApplicationController
   end
 
   def download
-    @orders = Order.where(account_id: current_user.accounts[0].id)
+    @orders = Order.where(account_template_id: current_user.templates.pluck(:id))
     render csv: @orders.to_csv, filename: "Orders #{Time.zone.now.to_s}"
   end
 

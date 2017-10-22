@@ -8,24 +8,19 @@ module Api
 
     def update
       account = current_user.accounts.find(params[:id])
-      result = Accounts::UpdateTemplate.run(update_params.merge(account: account))
-      respond_with result, serializer: AccountSerializer, location: nil
+      account.update(update_params)
+      respond_with account, serializer: AccountSerializer, location: nil
     end
 
     def sessions
       account = current_user.accounts.find(params[:id])
-      sessions = Account::Session.eager_load(:orders).where(account: account).order(id: :desc).limit(100)
+      sessions = Account.eager_load(templates: [:orders, :sessions]).find(params[:id]).sessions.order(id: :desc).limit(100)
       respond_with sessions, each_serializer: SessionSerializer, root: :sessions
-    end
-
-    def start
-      account = current_user.accounts.find(params[:id])
-      Strategy.new(account).call
-      render json: :ok
     end
 
     def destroy
       account = current_user.accounts.find(params[:id])
+      account.destroy
       render nothing: true
     end
 
@@ -36,21 +31,8 @@ module Api
     end
 
     def update_params
-      params.require(:template).permit(
-        :min_market_volume,
-        :min_sell_percent_diff,
-        :min_sell_percent_stop,
-        :min_buy_percent_diff,
-        :min_buy_sth_diff,
-        :min_buy_price,
-        :min_pump_risk_percent,
-        :interval,
-        :white_list_coef,
-        black_list: [],
-        white_list: []
-      )
+      create_params
     end
-
 
   end
 end

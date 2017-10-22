@@ -1,67 +1,28 @@
 .container-fluid{"ng-controller"=>"DashboardCtrl"}
   .app-container
     .row
-      .col-md-3
-        %h2
-          Подключенные биржи
-          %a{"ng-click"=>"addNewAccount()"}
-            %i.fa.fa-plus-circle{"aria-hidden" => "true"}
-      .accounts-item.col-md-1{"ng-repeat"=>"account in accounts"}
-        .accounts-item-card{"ng-click"=>"editAccount(account)"}
-          %a{}
-            {{ account.provider }}
-          %span.actions{"ng-if"=>"false"}
-            %a{"ng-click" => "deleteAccount($index, account.id)", style: "color: red;"}
-              %i.fa.fa-times{"aria-hidden" => "true"}
-
+      %h2
+        Подключенные биржи
+        %a{"ng-click"=>"addNewAccount()"}
+          %i.fa.fa-plus-circle{"aria-hidden" => "true"}
     %hr
-    .session-card.row{"ng-repeat"=>"session in sessions"}
-      .col-md-3
-        .session-card-header
-          %h5
-            {{session.date}}
-            %span
-              %button.btn{"ng-class"=>"session.status == 'completed' ? 'btn-success': 'btn-default'"}
-                {{session.status}}
-            %span.session-card-desc{"ng-if"=>"session.status.completed"}
-              {{session.buy_count}} buy, {{session.sell_count}} sell
-          %p
-      .col-md-9
-        .session-card-order{"ng-repeat"=>"order in session.orders | orderBy: '-id' "}
-          .session-card-order-header
-            %p
-              %span
-                %b
-                  id
-                {{order.id}}
-              %span
-                %b
-                  chain_id
-                {{order.chain_id}}
+    .account-items.row
+      .accounts-item.col-xs{"ng-repeat"=>"account in accounts"}
+        .accounts-item-card
+          .header
+            %a{"href"=>"{{'/accounts/' + account.id }}"}
+              {{ account.provider }}
 
-            %p{"ng-class"=>"order.type == 'buy' ? 'text-success' : 'text-danger'"}
-              %b {{order.type}}
-              %span
-                {{order.market}}
-              %span
-                | quantity - {{order.quantity}}
-              %span
-                | reason - {{order.reason }}
-              %span
-                | buy_count - {{order.sell_count }}
-              %span
-                | sell_count - {{order.buy_count }}
-              %span
-                | yesterday_price - {{order.yesterday_price }}
-            %p{"ng-if"=>"session.status == 'completed'"}
-              %span{"ng-if"=>"order.type == 'sell' && order.profit", "ng-class"=>"order.profit > 0 ? 'text-success' : 'text-danger'"}
-                %b
-                  profit - {{ order.profit }}
-              %span
-                | price - {{order.price }} |
-              %span
-                | commission - {{order.commission }} |
-              %span
-                | spread - {{order.spread}}
-              %span{}
-                | volume - {{order.volume}}
+          .templates.row
+            .templates-item.col-xs-2{"ng-repeat"=>"template in account.templates"}
+              %button.btn.btn-info{"ng-click"=>"editTemplate(template)"} {{template.currency}}
+            .templates-item.col-xs-2
+              %button.btn.btn-success{ "ng-click"=>"addNewTemplate(account)"}
+                %i.fa.fa-plus-circle{"aria-hidden" => "true"}
+          .actions
+            %span
+              %a{"ng-click" => "editAccount(account)"}
+                %i.fa.fa-pencil{"aria-hidden" => "true"}
+            %span
+              %a{"ng-click" => "deleteAccount($index, account.id)", style: "color: red;"}
+                %i.fa.fa-times{"aria-hidden" => "true"}

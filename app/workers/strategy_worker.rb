@@ -1,8 +1,8 @@
 class StrategyWorker < ApplicationWorker
 
-  def perform(account_id)
-    account = ::Account.find(account_id)
-    Strategy.new(account).call
+  def perform(template_id)
+    template = ::Account::Template.find(template_id)
+    Strategy.new(template).call
   end
 
 end

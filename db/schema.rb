@@ -11,36 +11,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171020091109) do
+ActiveRecord::Schema.define(version: 20171022010048) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "account_sessions", force: :cascade do |t|
-    t.integer  "buy_count",  default: 0
-    t.integer  "sell_count", default: 0
+    t.integer  "buy_count",           default: 0
+    t.integer  "sell_count",          default: 0
     t.text     "payload"
-    t.integer  "status",     default: 0
-    t.integer  "account_id"
+    t.integer  "status",              default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "account_template_id"
+    t.string   "strategy"
   end
 
-  add_index "account_sessions", ["account_id"], name: "index_account_sessions_on_account_id", using: :btree
-
   create_table "account_templates", force: :cascade do |t|
-    t.decimal "min_market_volume"
-    t.decimal "min_sell_percent_diff"
-    t.decimal "min_sell_percent_stop"
-    t.decimal "min_buy_sth_diff"
-    t.decimal "min_buy_percent_diff"
-    t.decimal "min_buy_price"
-    t.integer "interval"
-    t.integer "account_id"
-    t.decimal "min_pump_risk_percent", default: 5.0
-    t.text    "black_list"
-    t.text    "white_list"
-    t.decimal "white_list_coef"
+    t.decimal  "min_market_volume"
+    t.decimal  "min_sell_percent_diff"
+    t.decimal  "min_sell_percent_stop"
+    t.decimal  "min_buy_sth_diff"
+    t.decimal  "min_buy_percent_diff"
+    t.decimal  "min_buy_price"
+    t.integer  "account_id"
+    t.decimal  "min_pump_risk_percent", default: 5.0
+    t.text     "black_list"
+    t.text     "white_list"
+    t.decimal  "white_list_coef"
+    t.string   "currency"
+    t.integer  "interval",              default: 600
+    t.integer  "strategy",              default: 0
+    t.datetime "last_time"
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree
@@ -61,9 +63,8 @@ ActiveRecord::Schema.define(version: 20171020091109) do
     t.decimal  "price"
     t.decimal  "commission"
     t.string   "uuid"
-    t.integer  "status",          default: 0
+    t.integer  "status",              default: 0
     t.integer  "session_id"
-    t.integer  "account_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "reason"
@@ -75,9 +76,9 @@ ActiveRecord::Schema.define(version: 20171020091109) do
     t.integer  "buy_count"
     t.decimal  "yesterday_price"
     t.string   "chain_id"
+    t.integer  "account_template_id"
   end
 
-  add_index "orders", ["account_id"], name: "index_orders_on_account_id", using: :btree
   add_index "orders", ["session_id"], name: "index_orders_on_session_id", using: :btree
   add_index "orders", ["uuid"], name: "index_orders_on_uuid", using: :btree
 

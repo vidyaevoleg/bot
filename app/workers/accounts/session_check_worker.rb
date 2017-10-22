@@ -4,7 +4,7 @@ module Accounts
     def perform(session_id)
       session = Account::Session.find(session_id)
       if session.orders.empty?
-        Strategy.new(session.account).call
+        Strategy.new(session.template).call
       end
     end
   end

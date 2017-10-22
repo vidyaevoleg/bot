@@ -1,14 +1,13 @@
-%header
-  .container
-    .row
-      .col-md-4
-        %h1
-          %b
-            бот
-      .col-md-4
-        %button.btn
-          %a{href: '/download.csv'}
-            статистика
-      .col-md-4
-        %p
-          = current_user.email if current_user
+
+.container
+  %main
+    %p.title BOT v.1.1
+    %nav.menu{:role => "navigation"}
+      %ul
+        %li
+          %a{:href => "/"} Биржи
+        %li
+          %a{:href => "/download.csv"} Статистика
+        %li
+          %span
+            = current_user.email

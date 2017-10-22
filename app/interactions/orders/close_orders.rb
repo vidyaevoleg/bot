@@ -1,19 +1,21 @@
 module Orders
   class CloseOrders < ::ApplicationInteraction
-    object :account, class: ::Account
+    # set_callback :type_check, :before, -> { binding.pry }
+    # object :account, class: ::Account
+    object :template, class: ::Account::Template
 
     def execute
       client = account.create_client
       opened_orders = client.orders.opened
       opened_ids = opened_orders.map(&:id)
-      account.orders.pending.each do |order|
+      template.orders.pending.each do |order|
         if opened_ids.include?(order.uuid)
           remote_order = opened_orders.find {|o| o.id == order.uuid}
           remote_order.close!
           order.destroy!
         else
           if session
-            Orders::SaveOrder.run(account: account, session: session, uuid: order.uuid)
+            Orders::SaveOrder.run(template: template, session: session, uuid: order.uuid)
             session.add_count(order.type)
           else
             order.destroy
@@ -25,8 +27,14 @@ module Orders
       end
     end
 
+    private
+
+    def account
+      @_account ||= template.account
+    end
+
     def session
-      @_session ||= account.sessions.pending.last
+      @_session ||= template.sessions.pending.last
     end
   end
 end

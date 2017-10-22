@@ -3,7 +3,7 @@ module Orders
     attr_reader :remote_order
 
     string :uuid
-    object :account, class: Account
+    object :template, class: Account::Template
     object :session, class: Account::Session
     hash :options, default: {} do
       integer :reason, default: nil
@@ -18,8 +18,8 @@ module Orders
       client = account.create_client
       @remote_order = client.orders.find(uuid)
 
-      local_order = account.orders.find_by(uuid: uuid)
-      local_order ||= account.orders.build unless local_order
+      local_order = template.orders.find_by(uuid: uuid)
+      local_order ||= template.orders.build unless local_order
 
       attrs = {
         market: remote_order.market,
@@ -49,11 +49,11 @@ module Orders
     def profit
       if remote_order.type == 'sell' && remote_order.closed_at
         last_buy_order = Order.where(
-          account_id: account.id,
+          account_template_id: template.id,
           type: 'buy',
           market: remote_order.market
         ).last
-        if last_buy_order
+        if last_buy_order && last_buy_order.price
           margin = (remote_order.price - last_buy_order.price) * remote_order.quantity
           margin - remote_order.commission.to_f.to_d - last_buy_order.commission.to_f.to_d
         end
@@ -64,13 +64,17 @@ module Orders
       remote_order.closed_at
     end
 
+    def account
+      @_account ||= template.account
+    end
+
     def chain_id
       return unless options[:reason]
       reason = ::Order.reasons.invert[options[:reason]].to_sym
       if [:future].include?(reason)
         generate_chain_id
       elsif [:stop_loss, :too_long, :buy_more, :profit].include?(reason)
-        last_buy_order = account.orders.where(type: 'buy', market: remote_order.market).last
+        last_buy_order = template.orders.where(type: 'buy', market: remote_order.market).last
         last_buy_order.chain_id if last_buy_order
       end
     end

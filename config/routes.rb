@@ -9,11 +9,17 @@ Rails.application.routes.draw do
     get 'download'
   end
 
+  resources :accounts, only: [:show] do
+    
+  end
   namespace :api, defaults: {format: :json} do
     resources :accounts do
       get 'orders', on: :member
       get 'sessions', on: :member
+    end
+    resources :templates do
       post 'start', on: :member
+      post 'off', on: :member
     end
   end
 end

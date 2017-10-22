@@ -15,9 +15,25 @@ APP.service('API', ['$http', function ($http) {
       },
       delete: function (id) {
         return $http.delete(this.path + '/' + id);
+      }
+    },
+    templates: {
+      path: '/api/templates',
+      createOrUpdate: function (template) {
+        if (template.id) {
+          return $http.put(this.path + '/' + template.id, template);
+        } else {
+          return $http.post(this.path + '/', template);
+        }
+      },
+      delete: function (id) {
+        return $http.delete(this.path + '/' + id);
       },
       start: function (id) {
         return $http.post(this.path + '/' + id + "/start");
+      },
+      off: function (id) {
+        return $http.post(this.path + '/' + id + "/off");
       }
     }
   }

@@ -1,8 +1,7 @@
 .modal-header
   %h4.modal-title
     {{account.id ? 'Редактирование' : 'Подключение биржи'}}
-
-.modal-body
+.modal-body.account-modal
   %ul
     %li{"ng-repeat"=>"(key, value) in errors", "style"=>"color: red;"}
       {{key}} - {{value[0]}}
@@ -20,76 +19,8 @@
       .form-group
         %label secret
         %input.form-control{"ng-model"=>"account.secret"}
-  .config{"ng-if"=>"account.template"}
-    %h5
-      %b
-        условия продажи
-    .row
-      .col-xs
-        .form-group
-          %label минимальный процент перед продажей (%)
-          %input.form-control{"ng-model"=>"account.template.min_sell_percent_diff"}
-      .col-xs
-        .form-group
-          %label если актив упал на столько (%)
-          %input.form-control{"ng-model"=>"account.template.min_sell_percent_stop"}
-    %h5
-      %b
-        условия покупки
-    .row
-      .col-xs-6
-        .form-group
-          %label минимальная разница в сатоши
-          %input.form-control{"ng-model"=>"account.template.min_buy_sth_diff"}
-      .col-xs-6
-        .form-group
-          %label минимальная разница (%)
-          %input.form-control{"ng-model"=>"account.template.min_buy_percent_diff"}
-      .col-xs-6
-        .form-group
-          %label минимальная цена покупки (BTC)
-          %input.form-control{"ng-model"=>"account.template.min_buy_price"}
-      .col-xs-6
-        .form-group
-          %label процент, предотвращающий памп при покупке (%)
-          %input.form-control{"ng-model"=>"account.template.min_pump_risk_percent"}
-    .row
-      .col-xs-6
-        .form-group
-          %label
-            %b
-              вайт лист
-          %ui-select{:multiple => "multiple", "ng-model" => "account.template.white_list", "tagging-label"=>"(coin name)", :tagging => "", :theme => "bootstrap", :title => "Choose a coin"}
-            %ui-select-match{:placeholder => "select coin"} {{$item}}
-            %ui-select-choices{:repeat => "coin in account.template.coins | filter:$select.search"}
-              {{coin}}
-      .col-xs-6
-        .form-group
-          %label
-            %b блэк лист
-          %ui-select{:multiple => "multiple", "ng-model" => "account.template.black_list", :tagging => "", "tagging-label"=>"(coin name)", :theme => "bootstrap", :title => "Choose a coin"}
-            %ui-select-match{:placeholder => "select coin"} {{$item}}
-            %ui-select-choices{:repeat => "coin in account.template.coins | filter:$select.search"}
-              {{coin}}
-    %h5
-      %b
-        остальное
-    .row
-      .col-xs
-        .form-group
-          %label минимальный объем рынка актива (BTC)
-          %input.form-control{"ng-model"=>"account.template.min_market_volume"}
-      .col-xs
-        .form-group
-          %label интервал между сессиями (cекунды)
-          %input.form-control{"ng-model"=>"account.template.interval"}
-      .col-xs
-        .form-group
-          %label вайт лист коэффициент
-          %input.form-control{"ng-model"=>"account.template.white_list_coef"}
+
+
 .modal-footer
-  %button.btn.btn-success{"ng-if"=>"ui.needStart()", "ng-click"=>"start()"}
-    Запуск
   %button.btn.btn-primary{"ng-if"=>"!account.id", "ng-click"=>"createAccount()"} Подключить
-  %button.btn.btn-primary{"ng-if"=>"account.id", "ng-click"=>"updateAccount()"} Обновить
   %button.btn.btn-secondary{"ng-click"=>"closeModal()"} Закрыть

@@ -2,10 +2,10 @@ module Actions
   class PanicSell
     attr_reader :summary, :template, :wallet
 
-    def initialize(summary, template)
+    def initialize(summary, wallet, template)
       @template = template
       @summary = summary
-      @wallet = summary.wallet
+      @wallet = wallet
     end
 
     def call

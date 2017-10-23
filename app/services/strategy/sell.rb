@@ -26,7 +26,7 @@ class Strategy::Sell < Strategy
   def panic_sell(summary)
     wallet = summary.wallet
     if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
-      Actions::PanicSell.new(summary, wallet).call do |*args|
+      Actions::PanicSell.new(summary, wallet, template).call do |*args|
         new_order(*args)
       end
     end

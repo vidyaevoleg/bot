@@ -3,12 +3,13 @@
   %main
     %p.title BOT v.1.1
     %nav.menu{:role => "navigation"}
-      %ul
-        %li
-          %a{:href => "/"} Биржи
-        %li
-          %a{:href => "/download.csv"} Статистика
-        %li
-          %span
-            = current_user.email
+      - if current_user
+        %ul
+          %li
+            %a{:href => "/"} Биржи
+          %li
+            %a{:href => "/download.csv"} Статистика
+          %li
+            %span
+              = current_user.email
 %hr

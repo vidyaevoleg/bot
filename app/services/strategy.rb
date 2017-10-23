@@ -54,6 +54,7 @@ class Strategy
   end
 
   def start(summary)
+    return if our_currencies.include?(summary.market)
     wallet = summary.wallet
     if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
       Actions::Sell.new(summary, template, orders).call do |*args|
@@ -118,6 +119,19 @@ class Strategy
       wallet = wallets.find { |w| w.sign(settings.currency) == summary.market }
       summary.wallet = wallet
     end
+  end
+
+  def our_currencies
+    return @_our_currencies if @_our_currencies
+    words = template.account.templates.map {|t| "#{t.currency}"}
+    @_our_currencies = []
+    words.each do |word1|
+      words.reverse.each do |word2|
+        @_our_currencies << "#{word1}-#{word2}"
+        @_our_currencies << "#{word2}-#{word1}"
+      end
+    end
+    @_our_currencies.uniq
   end
 
   def save_last_call

@@ -9,17 +9,10 @@ module Actions
     end
 
     def call
-      if condition1
-        yield(summary, 'sell', order_volume, order_rate, Order.reasons[:panic_sell])
-      end
+      yield(summary, 'sell', order_volume, order_rate, Order.reasons[:panic_sell])
     end
 
     private
-
-    def condition1
-      our_currencies = template.account.templates.map {|t| "BTC-#{t.currency}"}
-      !our_currencies.include?(summary.market)
-    end
 
     def order_volume
       wallet.available

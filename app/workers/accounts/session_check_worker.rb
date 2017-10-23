@@ -3,8 +3,8 @@ module Accounts
 
     def perform(session_id)
       session = Account::Session.find(session_id)
-      if session.orders.empty?
-        Strategy.new(session.template).call
+      if session.orders.empty? && session.pending?
+        session.template.run_strategy
       end
     end
   end

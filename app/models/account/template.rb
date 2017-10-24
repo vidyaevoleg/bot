@@ -9,7 +9,7 @@ class Account::Template < ActiveRecord::Base
   serialize :white_list, Array
   validates :currency, :account, :min_buy_price,  presence: true
 
-  enum strategy: {default: 0, sell: 1}
+  enum strategy: {default: 0, sell: 1, quick_sell: 2}
 
   DEFAULT = {
     ETH: {
@@ -40,7 +40,7 @@ class Account::Template < ActiveRecord::Base
   end
 
   def run_strategy
-    strategy_klass = strategy.capitalize
+    strategy_klass = strategy.classify
     Strategy.const_get(strategy_klass).new(self).call
   end
 

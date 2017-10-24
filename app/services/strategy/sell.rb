@@ -1,13 +1,13 @@
 class Strategy::Sell < Strategy
 
   def call
+    perform_next_run
     summaries.each do |summary|
       fix(summary)
     end
     summaries.each do |summary|
       panic_sell(summary)
     end
-    perform_next_run
     perform_check
     save_last_call
   end

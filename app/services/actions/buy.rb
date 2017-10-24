@@ -2,14 +2,12 @@ module Actions
   class Buy
     attr_reader :summary,
       :template,
-      :orders,
       :used_balance,
       :max_balance
 
-    def initialize(summary, template, orders, used_balance, max_balance)
+    def initialize(summary, template, used_balance, max_balance)
       @template = template
       @summary = summary
-      @orders = orders
       @used_balance = used_balance
       @max_balance = max_balance
     end
@@ -42,9 +40,7 @@ module Actions
     end
 
     def condition5
-      last_sell_order = orders.find do |order|
-        order.market == summary.market && order.sell?
-      end
+      last_sell_order = template.account.orders.where(market: summary.market, type: 'sell').last
       return true unless last_sell_order
       order = last_sell_order
       !(summary.spread.to_f > (template.min_pump_risk_percent.to_f / 100) && order.closed_at && order.closed_at > 24.hours.ago)

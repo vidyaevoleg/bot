@@ -26,20 +26,19 @@ class Strategy
     @summaries = get_summaries
     save_coins
     @wallets = client.wallets.all
-    @orders = client.orders.all
     keep_wallets
     puts 'DATA FETCHED'.yellow
     @session = template.sessions.create(buy_count: 0, sell_count: 0, payload: "", strategy: template.strategy)
   end
 
   def call
+    perform_next_run
     summaries.each do |summary|
       fix(summary)
     end
     summaries.each do |summary|
       start(summary)
     end
-    perform_next_run
     perform_check
     save_last_call
   end
@@ -57,11 +56,11 @@ class Strategy
     return if our_currencies.include?(summary.market)
     wallet = summary.wallet
     if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
-      Actions::Sell.new(summary, template, orders).call do |*args|
+      Actions::Sell.new(summary, template).call do |*args|
         new_order(*args)
       end
     else
-      Actions::Buy.new(summary, template, orders, used_balance, full_balance).call do |*args|
+      Actions::Buy.new(summary, template, used_balance, full_balance).call do |*args|
         new_order(*args)
       end
     end

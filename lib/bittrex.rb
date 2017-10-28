@@ -3,37 +3,42 @@ class Bittrex
   autoload :Market, 'bittrex/market'
   autoload :Currency, 'bittrex/currency'
   autoload :Deposit, 'bittrex/deposit'
-  autoload :Order, 'bittrex/order'
+  autoload :Order, 'bittrex/remote_order'
   autoload :Item, 'bittrex/order/item'
   autoload :Ticker, 'bittrex/ticker'
   autoload :Summary, 'bittrex/summary'
   autoload :Wallet, 'bittrex/wallet'
   autoload :Withdrawal, 'bittrex/withdrawal'
+  autoload :Client, 'bittrex/client'
 
   attr_reader :client, :key, :secret
 
   def initialize(auth={})
     @key = auth[:key]
     @secret = auth[:secret]
-    @client = Bittrex::Client.new(auth)
+    @client = ::Bittrex::Client.new(auth)
     add_methods
+  end
+
+  def get(*args)
+    client.get(*args)
   end
 
   METHODS_MAP = {
     markets: Market,
     currencies: Currency,
     deposits: Deposit,
-    orders: Order,
+    remote_orders: RemoteOrder,
     base: Base,
     tickers: Ticker,
     summaries: Summary,
     wallets: Wallet,
-    withdrawals: Withdrawal
+    withdrawals: Withdrawal,
+    clients: Client
   }
 
   def add_methods
-    Base.cattr_accessor(:client)
-    Base.client = client
+    self.class.class_variable_set(:@@client, client)
     METHODS_MAP.each do |key, value|
       define_singleton_method(key) do
         value
@@ -41,6 +46,8 @@ class Bittrex
     end
   end
 
-  private
+  def self.client
+    @@client
+  end
 
 end

@@ -1,4 +1,4 @@
-class Client
+class MainClient
   HOST = 'https://bittrex.com/api/v1.1'
 
   attr_reader :key, :secret, :time, :cache

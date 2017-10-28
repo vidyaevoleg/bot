@@ -1,4 +1,4 @@
-class Bittrex::Client < Client
+class Bittrex::Client < MainClient
 
   def get(path, params = {}, headers = {})
     nonce = Time.now.to_i

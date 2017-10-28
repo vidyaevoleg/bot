@@ -1,4 +1,4 @@
-class Bittrex::Order < ::Bittrex::Base
+class Bittrex::RemoteOrder < ::Bittrex::Base
   attr_reader :type, :id, :market, :price, :quantity, :remaining,
     :total, :fill, :executed_at, :raw, :closed_at, :commission, :attrs
 
@@ -23,6 +23,10 @@ class Bittrex::Order < ::Bittrex::Base
 
   def full
     self.class.find(id)
+  end
+
+  def completed?
+    closed_at
   end
 
   class << self

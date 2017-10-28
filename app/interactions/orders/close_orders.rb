@@ -4,7 +4,7 @@ module Orders
 
     def execute
       client = account.create_client
-      opened_orders = client.orders.opened
+      opened_orders = client.remote_orders.opened
       opened_ids = opened_orders.map(&:id)
       template.orders.pending.each do |order|
         if opened_ids.include?(order.uuid)

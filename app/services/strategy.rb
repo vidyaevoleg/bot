@@ -107,7 +107,7 @@ class Strategy
   end
 
   def get_summaries
-    sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}-")}
+    sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}")}
     white_listed = sums.select {|s| settings.white_list.include?(s.market)}
     by_spread = sums.sort {|s| s.spread }
     (white_listed + by_spread).uniq

@@ -1,7 +1,7 @@
 class Account < ActiveRecord::Base
 
   belongs_to :user
-  enum provider: {bittrex: 0}
+  enum provider: {bittrex: 0, poloniex: 1}
   has_many :templates, class_name: Account::Template, dependent: :destroy
   has_many :orders, through: :templates
   has_many :sessions, through: :templates, class_name: Account::Session

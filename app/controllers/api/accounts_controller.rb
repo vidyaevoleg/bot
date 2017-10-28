@@ -14,7 +14,7 @@ module Api
 
     def sessions
       account = current_user.accounts.find(params[:id])
-      sessions = Account.eager_load(templates: [:orders, :sessions]).find(params[:id]).sessions.order(id: :desc).limit(100)
+      sessions = Account.eager_load(templates: [sessions: :orders]).find(params[:id]).sessions.order(id: :desc).limit(100)
       respond_with sessions, each_serializer: SessionSerializer, root: :sessions
     end
 

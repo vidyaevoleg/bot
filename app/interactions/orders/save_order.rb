@@ -1,6 +1,8 @@
+require 'exchanges'
+
 module Orders
   class SaveOrder < ::ApplicationInteraction
-    attr_reader :remote_order
+    attr_reader :remote_order, :local_order
 
     string :uuid
     object :template, class: Account::Template
@@ -16,10 +18,10 @@ module Orders
 
     def execute
       client = account.create_client
-      @remote_order = client.orders.find(uuid)
+      @remote_order = client.remote_orders.find(uuid)
 
-      local_order = template.orders.find_by(uuid: uuid)
-      local_order ||= template.orders.build unless local_order
+      @local_order = template.orders.find_by(uuid: uuid)
+      @local_order ||= template.orders.build unless local_order
 
       attrs = {
         market: remote_order.market,
@@ -40,6 +42,7 @@ module Orders
 
       attrs.merge!(chain_id: chain_id) unless completed?
       attrs.merge!(template_data: template.data) if completed?
+
       local_order.assign_attributes(attrs)
       local_order.save!
     end
@@ -61,7 +64,7 @@ module Orders
     end
 
     def completed?
-      remote_order.closed_at
+      remote_order.completed?
     end
 
     def account
@@ -73,7 +76,7 @@ module Orders
       reason = ::Order.reasons.invert[options[:reason]].to_sym
       if [:future].include?(reason)
         generate_chain_id
-      elsif [:stop_loss, :too_long, :buy_more, :profit].include?(reason)
+      elsif [:stop_loss, :too_long, :buy_more, :profit, :panic_sell].include?(reason)
         last_buy_order = template.orders.where(type: 'buy', market: remote_order.market).last
         last_buy_order.chain_id if last_buy_order
       end

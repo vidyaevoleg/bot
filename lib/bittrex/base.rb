@@ -1,5 +1,4 @@
-class Bittrex::Base
-
+class Bittrex::Base < Bittrex
   def self.all
     if self != Bittrex::Base
       client.get(api_path).map{|data| new(data) }
@@ -7,11 +6,4 @@ class Bittrex::Base
       []
     end
   end
-
-  private
-
-  def self.client
-    @client ||= Bittrex.client
-  end
-
 end

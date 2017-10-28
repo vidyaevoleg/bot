@@ -10,7 +10,7 @@ class Poloniex::RemoteOrder < ::Poloniex::Base
     @market = attrs['market']
     @quantity = quantity
     @price = attrs['rate'].to_f
-    @commission = attrs['fee'].to_f
+    @commission = attrs['fee'].to_f * quantity.to_f * price.to_f
     @closed_at = closed_at
   end
 

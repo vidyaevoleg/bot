@@ -67,7 +67,7 @@ module Stat
     end
 
     def profit
-      orders.map(&:profit).compact.map(&:to_f).inject(&:+)
+      orders.map(&:profit).compact.map(&:to_f).inject(&:+).to_f
     end
 
     def profit_orders

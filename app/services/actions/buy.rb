@@ -52,7 +52,6 @@ module Actions
     end
 
     def condition6
-      binding.pry
       # проверяем спред в пределах разумного
       summary.spread > template.min_buy_percent_diff && summary.spread < template.max_buy_percent_diff
     end

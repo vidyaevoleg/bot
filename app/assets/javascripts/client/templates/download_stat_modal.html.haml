@@ -1,0 +1,30 @@
+.modal-header
+  %h4.modal-title
+    Статистика
+.modal-body.download-modal
+  .row
+    .col-xs-4
+      .form-group
+        %label Валюта
+        %select.form-control{"ng-model"=>"params.currency"}
+          %option{"ng-value"=>"'ETH'"} ETH
+          %option{"ng-value"=>"'BTC'"} BTC
+    .col-xs-8
+      .row
+        .col-xs
+          .form-group
+            %label от
+            %input.form-control{"ng-model"=>"params.from", "type"=>"date"}
+        .col-xs
+          .form-group
+            %label до
+            %input.form-control{"ng-model"=>"params.to", "type"=>"date"}
+    .sheets{"ng-class"=>"!ui.setupIsValid() && 'disabled'"}
+      .sheets-block{"ng-repeat"=>"sheet in sheets"}
+        %btn.btn.btn-info
+          %a{"href"=>"#", "ng-click"=>"downloadSheet(sheet)"}
+            {{sheet}}
+
+
+.modal-footer
+  %button.btn.btn-secondary{"ng-click"=>"closeModal()"} Закрыть

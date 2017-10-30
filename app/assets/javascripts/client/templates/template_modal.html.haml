@@ -46,14 +46,18 @@
         %b
           условия покупки
       .row
-        .col-xs-6
+        .col-xs-4
           .form-group
-            %label минимальная разница в сатоши
+            %label минимальный спред (сатоши)
             %input.form-control{"ng-model"=>"template.min_buy_sth_diff"}
-        .col-xs-6
+        .col-xs-4
           .form-group
-            %label минимальная разница (%)
+            %label минимальный спред (%)
             %input.form-control{"ng-model"=>"template.min_buy_percent_diff"}
+        .col-xs-4
+          .form-group
+            %label максимальный спред (%)
+            %input.form-control{"ng-model"=>"template.max_buy_percent_diff"}            
         .col-xs-6
           .form-group
             %label минимальная цена покупки ({{template.currency}})

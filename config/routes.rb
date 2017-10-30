@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   resources :accounts, only: [:show] do
-    
+
   end
   namespace :api, defaults: {format: :json} do
     resources :accounts do
@@ -22,4 +22,11 @@ Rails.application.routes.draw do
       post 'off', on: :member
     end
   end
+  namespace :stat do
+    controller :application do
+      get 'days'
+      get 'all'
+    end
+  end
+
 end

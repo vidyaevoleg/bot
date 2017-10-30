@@ -22,7 +22,7 @@ module Bot
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.assets.paths << Rails.root.join('bower_components')
-    config.autoload_paths += %W(#{config.root}/lib #{config.root}/vendor/engines #{config.root}/app/workers)
+    config.autoload_paths += %W(#{config.root}/lib #{config.root}/vendor/engines #{config.root}/app/workers #{config.root}/presenters)
     config.cache_store = :redis_store, Pathname(Settings.reload!.redis_url).join('cache').to_s, { expires_in: 90.minutes }
     config.active_record.raise_in_transactional_callbacks = true
     config.angular_templates.markups.push('haml')

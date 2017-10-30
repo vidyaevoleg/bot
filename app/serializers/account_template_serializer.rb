@@ -15,6 +15,7 @@ class AccountTemplateSerializer < ApplicationSerializer
     :currency,
     :strategy,
     :need_restart,
+    :max_buy_percent_diff
 
   def need_restart
     !object.last_time || (Time.zone.now - object.last_time > object.interval)

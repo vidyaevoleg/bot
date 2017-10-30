@@ -5,7 +5,6 @@ class Strategy
     :wallets,
     :summaries,
     :orders,
-    :settings,
     :session,
     :currency
 
@@ -19,8 +18,7 @@ class Strategy
     @account = template.account
     template.clear_workers
     @used_balance = 0.0
-    @settings = template
-    @currency = settings.currency
+    @currency = template.currency
     @client = account.create_client
     close_orders
     @summaries = get_summaries
@@ -77,7 +75,7 @@ class Strategy
   end
 
   def max_buy_deals_count
-    (full_balance.to_d / settings.min_buy_price.to_d).to_i
+    (full_balance.to_d / template.min_buy_price.to_d).to_i
   end
 
   def new_order(summary, type, volume, price, reason = nil)
@@ -87,7 +85,7 @@ class Strategy
     end
     puts "#{type} ордер  #{sign} по цене #{price} объемом #{volume} #{Time.zone.now} reason #{reason}".green
     puts "USED BALANCE #{used_balance}".green
-    ::Orders::CreateWorker.perform_async(settings.id, session.id, {
+    ::Orders::CreateWorker.perform_async(template.id, session.id, {
       sign: sign,
       type: type,
       volume: volume,
@@ -103,19 +101,19 @@ class Strategy
   end
 
   def save_coins
-    Rails.cache.write(settings.coins_cache_key, summaries.map(&:market))
+    Rails.cache.write(template.coins_cache_key, summaries.map(&:market))
   end
 
   def get_summaries
     sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}")}
-    white_listed = sums.select {|s| settings.white_list.include?(s.market)}
+    white_listed = sums.select {|s| template.white_list.include?(s.market)}
     by_spread = sums.sort {|s| s.spread }
     (white_listed + by_spread).uniq
   end
 
   def keep_wallets
     summaries.each do |summary|
-      wallet = wallets.find { |w| w.sign(settings.currency) == summary.market }
+      wallet = wallets.find { |w| w.sign(template.currency) == summary.market }
       summary.wallet = wallet
     end
   end
@@ -138,7 +136,7 @@ class Strategy
   end
 
   def perform_next_run
-    StrategyWorker.perform_in(settings.interval.seconds, template.id)
+    StrategyWorker.perform_in(template.interval.seconds, template.id)
   end
 
   def perform_check

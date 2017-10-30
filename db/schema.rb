@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171022112158) do
+ActiveRecord::Schema.define(version: 20171029011305) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20171022112158) do
     t.integer  "interval",              default: 600
     t.integer  "strategy",              default: 0
     t.datetime "last_time"
+    t.decimal  "max_buy_percent_diff",  default: 4.0
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree

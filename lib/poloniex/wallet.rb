@@ -47,7 +47,7 @@ class Poloniex::Wallet < ::Poloniex::Base
     return 0 if balance == 0
     _summary = summary(second_currency)
 
-    if !summary
+    if !_summary
       0
     elsif usd?
       0

@@ -7,7 +7,7 @@
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
     = Gon::Base.render_data
-  %body{"ng-app"=>"robot"}
+  %body{"ng-app"=>"robot", "ng-controller"=>"AppCtrl"}
     = render partial: 'layouts/header'
-    .app{"ng-controller"=>"AppCtrl"}
+    .app
       = yield

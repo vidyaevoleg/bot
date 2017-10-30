@@ -7,6 +7,7 @@ body, html
 
 $info: rgb(222, 223, 219)
 $gray: rgb(182, 182, 180)
+$empty : rgba(242, 114, 70, 0.13)
 
 i
   cursor: pointer
@@ -105,19 +106,31 @@ span.inline
           margin-left: 5px
 
 .session-card
-  margin: 10px 0 10px 0
+  padding: 10px 0
+  margin: 0
   border-bottom: 1px solid $gray
   font-size: 14px
+  overflow: hidden
+  &.empty 
+    padding: 2px 0
+    background: $empty
+    border-bottom-color: white
   &-header
     span
       margin-left: 20px
       position: relative
   &-order
+    background: #f5f5f5
+    padding: 4px
+    margin-bottom: 4px
+    p
+      margin-bottom: 4px  
     &-header
       span
-        margin-left: 5px
+        margin-right: 5px
         color: black
         position: relative
+
 .account-modal
   .nav
     margin: 30px 0 30px 0

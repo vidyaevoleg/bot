@@ -10,6 +10,7 @@ class Bittrex
   autoload :Wallet, 'bittrex/wallet'
   autoload :Withdrawal, 'bittrex/withdrawal'
   autoload :Client, 'bittrex/client'
+  autoload :Chart, 'bittrex/chart'
 
   attr_reader :client, :key, :secret
 
@@ -30,6 +31,7 @@ class Bittrex
     deposits: Deposit,
     remote_orders: RemoteOrder,
     base: Base,
+    chart: Chart,
     tickers: Ticker,
     summaries: Summary,
     wallets: Wallet,

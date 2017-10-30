@@ -7,9 +7,9 @@ class Account::Template < ActiveRecord::Base
 
   serialize :black_list, Array
   serialize :white_list, Array
-  validates :currency, :account, :min_buy_price,  presence: true
+  validates :currency, :account, :min_buy_price, presence: true
 
-  enum strategy: {default: 0, sell: 1, quick_sell: 2, rank_volume: 3}
+  enum strategy: {default: 0, sell: 1, quick_sell: 2, rank_volume: 3, trend_trade: 4}
 
   DEFAULT = {
     ETH: {

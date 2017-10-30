@@ -12,7 +12,9 @@ class Strategy::Sell < Strategy
     save_last_call
   end
 
-
+  # точно такой же есть в базовой стратегии
+  # наверное можно отсюда убрать
+  # 
   def fix(summary)
     wallet = summary.wallet
     if wallet && wallet.available_currency(currency) > 0 && wallet.available_currency(currency) < MIN_TRADE_VOLUME

@@ -63,7 +63,7 @@ module Stat
     end
 
     def roi
-      profit / turnover
+      profit.to_f / turnover.to_f
     end
 
     def profit

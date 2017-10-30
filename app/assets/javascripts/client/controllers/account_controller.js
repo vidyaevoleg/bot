@@ -5,4 +5,6 @@ APP.controller('AccountCtrl', ['API', '$scope', 'modalService', 'Notification', 
   $scope.editTemplate = function (template) {
     modalService.init('client/templates/template_modal.html', 'TemplateModalCtrl', {template: template}, 'lg');
   };
+
+  $scope.wallets = gon.wallets.filter(function(item) { return item.available > 0});
 }]);

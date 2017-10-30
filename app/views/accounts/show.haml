@@ -10,6 +10,17 @@
           {{template.currency}}
           %span.inline{"ng-class"=>"template.need_restart ? 'text-danger' : 'text-success'"}
             {{template.need_restart ? 'off' : 'on'}}
+  .account-wallets
+    .account-wallets-item{{"ng-repeat" => "wallet in wallets"}}
+      %p
+        %b
+          {{wallet.currency}}
+        %span
+          {{wallet.available}}
+        %span
+          %b
+            BTC
+          {{wallet.available_btc}}
   %hr
 
   %div{"ng-repeat"=>"session in sessions"}
@@ -76,5 +87,3 @@
                 | spread - {{order.spread}}
               %span{}
                 | volume - {{order.volume}}
-
-

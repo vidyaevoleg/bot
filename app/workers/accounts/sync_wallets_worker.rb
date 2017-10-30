@@ -3,7 +3,7 @@ module Accounts
 
     def perform(template_id)
       template = Account::Template.find(template_id)
-      Account::SyncWallets.run!(template: template)
+      ::Accounts::SyncWallets.run!(template: template)
     end
   end
 end

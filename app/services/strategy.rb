@@ -141,7 +141,7 @@ class Strategy
   end
 
   def sync_wallets
-    # Accounts::SyncWalletsWorker.perform_async(template.id)
+    Accounts::SyncWalletsWorker.perform_async(template.id)
   end
 
   def perform_check

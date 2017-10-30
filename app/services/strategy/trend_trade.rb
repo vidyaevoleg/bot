@@ -65,5 +65,4 @@ class Strategy::TrendTrade < Strategy
 		array = trend_values.last((minutes / TREND[:INTERVAL_IN_MINUTES]) + 1)
 		array.last - array.first > 0
   end
-
 end

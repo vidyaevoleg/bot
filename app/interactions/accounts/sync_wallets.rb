@@ -2,7 +2,7 @@ module Accounts
   class SyncWallets < ::ApplicationInteraction
     attr_reader :account
 
-    object :template, Account::Template
+    object :template, class: ::Account::Template
 
     def execute
       @account = template.account
@@ -17,7 +17,7 @@ module Accounts
     private
 
     def save_wallet(remote_wallet)
-      wallet = account.wallets.find(currency: remote_wallet.currency)
+      wallet = account.wallets.find_by(currency: remote_wallet.currency)
       attrs = {
         currency: remote_wallet.currency,
         available: remote_wallet.available,
@@ -26,7 +26,7 @@ module Accounts
       if wallet
         wallet.update!(attrs)
       else
-        accounts.wallets.create(attrs)
+        account.wallets.create(attrs)
       end
     end
   end

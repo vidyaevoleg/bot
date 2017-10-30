@@ -1,6 +1,7 @@
 class Poloniex::Client < MainClient
 
   def res(request_type, path, command, params={}, headers={})
+
     nonce = (Time.now.to_f * 10000000).to_i
     params[:nonce] = nonce
     params[:command] = command
@@ -25,12 +26,15 @@ class Poloniex::Client < MainClient
           req.headers[:Sign] = signature(params)
           req.headers.merge!(headers)
         end
+
       end
       puts "REQUEST #{hash}".blue
       response
     end
+
     answer = JSON.parse(result.body)
-    raise "#{answer['error']}" if answer['error']
+
+    raise "#{answer['error']}" if !answer.is_a?(Array) && answer['error']
     answer
   end
 

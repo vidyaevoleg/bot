@@ -5,6 +5,7 @@ class Poloniex
   autoload :Wallet, 'poloniex/wallet'
   autoload :Market, 'poloniex/market'
   autoload :Client, 'poloniex/client'
+  autoload :Chart, 'poloniex/chart'
 
   attr_reader :client, :key, :secret
 
@@ -21,7 +22,8 @@ class Poloniex
     summaries: Summary,
     wallets: Wallet,
     markets: Market,
-    clients: Client
+    clients: Client,
+    chart: Chart
   }
 
   def add_methods

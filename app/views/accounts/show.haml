@@ -12,62 +12,69 @@
             {{template.need_restart ? 'off' : 'on'}}
   %hr
 
-  .session-card.row{"ng-repeat"=>"session in sessions"}
-    .col-md-3
-      .session-card-header
-        %h5
-          {{session.date}}
+  %div{"ng-repeat"=>"session in sessions"}
+    .session-card.row.empty{"ng-if"=>"(+session.buy_count + +session.sell_count) == 0 && session.status == 'completed'"}
+      .col-md-3 {{session.date}}
+      .col-md-3 {{session.strategy}}
 
-      .session-card-desc
-        %p
-          %button.btn{"ng-class"=>"session.status == 'completed' ? 'btn-success': 'btn-default'"}
-            {{session.status}}
-        %p
-          {{session.buy_count}} buy, {{session.sell_count}} sell
-        %p
-          currency
-          %b
-            {{session.template.currency}}
-        %p
-          strategy
-          %b
-            {{session.strategy}}
-    .col-md-9
-      .session-card-order{"ng-repeat"=>"order in session.orders | orderBy: '-id' "}
-        .session-card-order-header
+    .session-card.row{"ng-if"=>"!((+session.buy_count + +session.sell_count) == 0 && session.status == 'completed')"}
+      .col-md-3
+        .session-card-header
+          %h5
+            {{session.date}}
+
+        .session-card-desc
           %p
-            %span
-              %b
-                id
-              {{order.id}}
-            %span
-              %b
-                chain_id
-              {{order.chain_id}}
+            %button.btn{"ng-class"=>"session.status == 'completed' ? 'btn-success': 'btn-default'"}
+              {{session.status}}
+          %p
+            {{session.buy_count}} buy, {{session.sell_count}} sell
+          %p
+            currency
+            %b
+              {{session.template.currency}}
+          %p
+            strategy
+            %b
+              {{session.strategy}}
+      .col-md-9
+        .session-card-order{"ng-repeat"=>"order in session.orders | orderBy: '-id' "}
+          .session-card-order-header
+            %p
+              %span
+                %b
+                  id
+                {{order.id}}
+              %span
+                %b
+                  chain_id
+                {{order.chain_id}}
 
-          %p{"ng-class"=>"order.type == 'buy' ? 'text-success' : 'text-danger'"}
-            %b {{order.type}}
-            %span
-              {{order.market}}
-            %span
-              | quantity - {{order.quantity}}
-            %span
-              | reason - {{order.reason }}
-            %span
-              | buy_count - {{order.sell_count }}
-            %span
-              | sell_count - {{order.buy_count }}
-            %span
-              | yesterday_price - {{order.yesterday_price }}
-          %p{"ng-if"=>"session.status == 'completed'"}
-            %span{"ng-if"=>"order.type == 'sell' && order.profit", "ng-class"=>"order.profit > 0 ? 'text-success' : 'text-danger'"}
-              %b
-                profit - {{ order.profit }}
-            %span
-              | price - {{order.price }} |
-            %span
-              | commission - {{order.commission }} |
-            %span
-              | spread - {{order.spread}}
-            %span{}
-              | volume - {{order.volume}}
+            %p{"ng-class"=>"order.type == 'buy' ? 'text-success' : 'text-danger'"}
+              %b {{order.type}}
+              %span
+                {{order.market}}
+              %span
+                | quantity - {{order.quantity}}
+              %span
+                | reason - {{order.reason }}
+              %span
+                | buy_count - {{order.sell_count }}
+              %span
+                | sell_count - {{order.buy_count }}
+              %span
+                | yesterday_price - {{order.yesterday_price }}
+            %p{"ng-if"=>"session.status == 'completed'"}
+              %span{"ng-if"=>"order.type == 'sell' && order.profit", "ng-class"=>"order.profit > 0 ? 'text-success' : 'text-danger'"}
+                %b
+                  profit - {{ order.profit }}
+              %span
+                | price - {{order.price }} |
+              %span
+                | commission - {{order.commission }} |
+              %span
+                | spread - {{order.spread}}
+              %span{}
+                | volume - {{order.volume}}
+
+

@@ -31,7 +31,7 @@ class Bittrex
     deposits: Deposit,
     remote_orders: RemoteOrder,
     base: Base,
-    chart: Chart,
+    charts: Chart,
     tickers: Ticker,
     summaries: Summary,
     wallets: Wallet,

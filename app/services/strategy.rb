@@ -25,6 +25,7 @@ class Strategy
     save_coins
     @wallets = client.wallets.all
     keep_wallets
+    sync_wallets
     puts 'DATA FETCHED'.yellow
     @session = template.sessions.create(buy_count: 0, sell_count: 0, payload: "", strategy: template.strategy)
   end
@@ -137,6 +138,10 @@ class Strategy
 
   def perform_next_run
     StrategyWorker.perform_in(template.interval.seconds, template.id)
+  end
+
+  def sync_wallets
+    # Accounts::SyncWalletsWorker.perform_async(template.id)
   end
 
   def perform_check

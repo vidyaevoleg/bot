@@ -1,26 +1,29 @@
 class Bittrex::Chart < ::Bittrex::Base
-  attr_reader :market, :data
+  attr_reader :market, :open, :low, :high, :close, :volume, :timestamp
 
   def initialize(attrs = {})
-
-    @market = market
-    @data = attrs.map { |el|
-      {
-        open: el['O'],
-        low: el['L'],
-        high: el['H'],
-        close: el['C'],
-        volume: el['V'],
-        timestamp: Time.parse(el['T']).to_i
-      }
-    }
+    @market = attrs['market']
+    @open =  attrs['O'],
+    @low =  attrs['L'],
+    @high =  attrs['H'],
+    @close =  attrs['C'],
+    @volume =  attrs['V'],
+    @timestamp =  Time.parse(attrs['T']).to_i
   end
 
-  def self.find(market, interval = 5)
-    new(market, client.get('pub/market/GetTicks', {
-      marketName: market, 
-      tickInterval: tick_interval_name(interval)
-    }, {}, 'https://bittrex.com/Api/v2.0'))
+  class << self
+    def find(currency, second_currency, interval = 5)
+      market_name = "#{currency}-#{second_currency}"
+      charts = client.get('pub/market/GetTicks', {
+        marketName: market_name,
+        tickInterval: tick_interval_name(interval)
+      }, {}, 'https://bittrex.com/Api/v2.0')
+      charts.map do |chart|
+        new(chart.merge("market" => market_name))
+      end
+    end
+
+    alias_method :all, :find
   end
 
   def self.tick_interval_name(interval)

@@ -1,5 +1,4 @@
 class Strategy::RankVolume < Strategy
-
   def get_summaries
     sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}")}
     white_listed = sums.select {|s| template.white_list.include?(s.market)}

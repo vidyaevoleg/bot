@@ -1,11 +1,11 @@
 class Poloniex::Wallet < ::Poloniex::Base
-  attr_reader :id, :currency, :balance, :available, :pending, :raw, :balance_btc
+  attr_reader :id, :currency, :balance, :available, :pending, :raw, :available_btc
 
   def initialize(attrs = {})
     @currency = attrs['currency']
     @available = attrs['available'].to_f
     @pending = attrs['onOrders'].to_f
-    @balance_btc = attrs['btcValue'].to_f
+    @available_btc = attrs['btcValue'].to_f
     @raw = attrs
     @cache = {}
   end

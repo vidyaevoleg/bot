@@ -1,5 +1,5 @@
 class Bittrex::Wallet < ::Bittrex::Base
-  attr_reader :id, :currency, :balance, :available, :pending, :address, :requested, :raw, :balance_btc
+  attr_reader :id, :currency, :balance, :available, :pending, :address, :requested, :raw
 
   def initialize(attrs = {})
     @id = attrs['Uuid'].to_s
@@ -45,6 +45,10 @@ class Bittrex::Wallet < ::Bittrex::Base
     else
       balance * _summary.last
     end
+  end
+
+  def available_btc
+    available_currency('BTC')
   end
 
   private

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171029011305) do
+ActiveRecord::Schema.define(version: 20171030180657) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -47,6 +47,15 @@ ActiveRecord::Schema.define(version: 20171029011305) do
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree
+
+  create_table "account_wallets", force: :cascade do |t|
+    t.string  "currency"
+    t.decimal "available"
+    t.decimal "available_btc"
+    t.integer "account_id"
+  end
+
+  add_index "account_wallets", ["account_id"], name: "index_account_wallets_on_account_id", using: :btree
 
   create_table "accounts", force: :cascade do |t|
     t.string  "key"

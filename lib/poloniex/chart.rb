@@ -1,28 +1,31 @@
 class Poloniex::Chart < ::Poloniex::Base
-  attr_reader :market, :data
+  attr_reader :market, :open, :low, :high, :close, :volume, :timestamp
 
-  def initialize(market, attrs = {})
-
-    @market = market
-    @data = attrs.map { |el|
-      {
-        open: el["open"],
-        low: el["low"],
-        high: el["high"],
-        close: el["close"],
-        volume: el["volume"],
-        timestamp: el["date"]
-      }
-    }
+  def initialize(attrs = {})
+    @market = attrs["market"]
+    @open =  attrs["open"].to_f,
+    @low =  attrs["low"].to_f,
+    @high =  attrs["high"].to_f,
+    @close =  attrs["close"].to_f,
+    @volume =  attrs["volume"].to_f,
+    @timestamp =  attrs["date"]
   end
 
-  def self.find(market, interval = 5)
-    new(market, client.get(api_path, api_command, {
-      currencyPair: market,
-      period: tick_interval_name(interval),
-      end:9999999999,
-      start: (Time.now - 2.days).to_i
-    }, {}))
+  class << self
+    def find(currency, second_currency, interval = 5)
+      market_name = "#{currency}_#{second_currency}"
+      charts = client.get(api_path, api_command, {
+        currencyPair: market_name,
+        period: tick_interval_name(interval),
+        end: 9999999999,
+        start: (Time.now - 2.days).to_i
+      })
+      charts.map do |chart|
+        new(chart.merge("market" => market_name))
+      end
+    end
+
+    alias_method :all, :find
   end
 
   def self.tick_interval_name(interval)
@@ -36,7 +39,7 @@ class Poloniex::Chart < ::Poloniex::Base
   end
 
   def self.api_path
-    ''
+    'public'
   end
 
   def self.api_command

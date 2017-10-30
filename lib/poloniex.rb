@@ -23,7 +23,7 @@ class Poloniex
     wallets: Wallet,
     markets: Market,
     clients: Client,
-    chart: Chart
+    charts: Chart
   }
 
   def add_methods

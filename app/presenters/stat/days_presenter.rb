@@ -55,7 +55,7 @@ module Stat
     end
 
     def turnover
-      orders.find_all {|o| o.type == 'buy'}.map {|o| (o.quantity.to_d * o.price.to_d).to_f}.inject(&:+)
+      orders.find_all {|o| o.type == 'buy'}.map {|o| (o.quantity.to_f.to_d * o.price.to_f.to_d).to_f}.inject(&:+)
     end
 
     def turnover_from_deposite

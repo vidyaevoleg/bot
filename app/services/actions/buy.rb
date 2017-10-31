@@ -53,7 +53,7 @@ module Actions
 
     def condition6
       # проверяем спред в пределах разумного
-      summary.spread > template.min_buy_percent_diff && summary.spread < template.max_buy_percent_diff
+      summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
     end
 
     def in_black_list?

@@ -2,12 +2,12 @@ module Api
   class TemplatesController < ::Api::ApplicationController
 
     def create
-      template = ::Account::Template.create(create_params)
+      template = ::Account::Template.create!(create_params)
       respond_with template, serializer: AccountTemplateSerializer, location: nil
     end
 
     def update
-      template.update(update_params)
+      template.update!(update_params)
       respond_with template, serializer: AccountTemplateSerializer, location: nil
     end
 
@@ -52,6 +52,7 @@ module Api
         :min_sell_percent_diff,
         :min_sell_percent_stop,
         :min_buy_percent_diff,
+        :max_buy_percent_diff,
         :min_buy_sth_diff,
         :min_buy_price,
         :min_pump_risk_percent,

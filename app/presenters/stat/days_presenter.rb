@@ -70,20 +70,21 @@ module Stat
     end
 
     def median_win_roi
-      median(profit_orders.map(&:profit))
+      median(profit_orders.map(&:profit).compact)
     end
 
     def median_loss_roi
-      median(lesion_orders.map(&:profit))
+      median(lesion_orders.map(&:profit).compact)
     end
 
     def avarage
       good_orders = orders.find_all {|o| o.created_at && o.closed_at}
       diffs = good_orders.map {|o| o.closed_at - o.created_at}.inject(&:+)
-      diffs / good_orders.count
+      diffs / good_orders.count if diffs
     end
 
     def median(array)
+      return if array.empty?
       sorted = array.sort
       len = sorted.length
       (sorted[(len - 1) / 2] + sorted[len / 2]) / 2.0

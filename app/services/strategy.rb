@@ -15,6 +15,7 @@ class Strategy
 
   def initialize(template)
     @template = template
+    sync_balances
     @account = template.account
     template.clear_workers
     @used_balance = 0.0
@@ -142,6 +143,10 @@ class Strategy
 
   def sync_wallets
     Accounts::SyncWalletsWorker.perform_async(template.id)
+  end
+
+  def sync_balances
+    Orders::SaveReportsWorker.perform_async(template.id)
   end
 
   def perform_check

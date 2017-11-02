@@ -4,6 +4,10 @@
       Опции для валюты
       %b
         {{template.currency}}
+      %span.history
+        %a{"href"=>"/templates/{{template.id}}"}
+          (история)
+
   .modal-body
     .config
       %h5
@@ -23,7 +27,7 @@
               %option{"value"=>"sell"} только продавать
               %option{"value"=>"quick_sell"} быстрая продажа
               %option{"value"=>"rank_volume"} сортировка по рангу
-              %option{"value"=>"trend_trade"} торговля от тренда 
+              %option{"value"=>"trend_trade"} торговля от тренда
 
         .col-xs
           .form-group
@@ -57,7 +61,7 @@
         .col-xs-4
           .form-group
             %label максимальный спред (%)
-            %input.form-control{"ng-model"=>"template.max_buy_percent_diff"}            
+            %input.form-control{"ng-model"=>"template.max_buy_percent_diff"}
         .col-xs-6
           .form-group
             %label минимальная цена покупки ({{template.currency}})

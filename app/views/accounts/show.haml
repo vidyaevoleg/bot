@@ -17,7 +17,7 @@
           {{wallet.currency}}
         %span
           {{wallet.available}}
-        %span
+        %span{"ng-if"=>"wallet.currency != 'BTC'"}
           %b
             BTC
           {{wallet.available_btc}}

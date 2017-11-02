@@ -1,0 +1,30 @@
+.container-fluid{"ng-controller"=>"TemplateCtrl"}
+  %h1 {{template.currency}}
+
+  %table.table.table-condensed
+    %thead
+      %tr
+        %th #
+        %th стратегия
+        %th.td-address баланс
+        %th.td-payment профит
+        %th когда
+        %th
+    %tbody
+      %tr{"ng-repeat"=>"report in template.reports | orderBy: 'id':true"}
+        %td
+        %th
+          %span
+            {{report.strategy}}
+        %td.td-address
+          %span.address
+            {{report.balance}}
+        %td.td-payment
+          %span
+            {{report.profit}}
+        %td.td-amount
+          %span
+            {{report.date}}
+        %th
+          %span
+        %th

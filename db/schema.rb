@@ -11,10 +11,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171030180657) do
+ActiveRecord::Schema.define(version: 20171031150427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_reports", force: :cascade do |t|
+    t.integer  "account_template_id"
+    t.integer  "type",                default: 0
+    t.decimal  "balance",             default: 0.0
+    t.decimal  "profit",              default: 0.0
+    t.string   "currency"
+    t.string   "strategy"
+    t.date     "datetime"
+    t.text     "payload"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "account_reports", ["account_template_id"], name: "index_account_reports_on_account_template_id", using: :btree
 
   create_table "account_sessions", force: :cascade do |t|
     t.integer  "buy_count",           default: 0

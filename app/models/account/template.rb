@@ -3,7 +3,8 @@ class Account::Template < ActiveRecord::Base
 
   belongs_to :account
   has_many :orders, foreign_key: :account_template_id
-  has_many :sessions, class_name: Account::Session, foreign_key: :account_template_id
+  has_many :sessions, class_name: ::Account::Session, foreign_key: :account_template_id, dependent: :destroy
+  has_many :reports, class_name: ::Account::Report, foreign_key: :account_template_id, dependent: :destroy
 
   serialize :black_list, Array
   serialize :white_list, Array

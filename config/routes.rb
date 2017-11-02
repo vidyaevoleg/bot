@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   resources :accounts, only: [:show] do
 
   end
+  resources :templates, only: [:show]
+  
   namespace :api, defaults: {format: :json} do
     resources :accounts do
       get 'orders', on: :member

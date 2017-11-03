@@ -12,7 +12,7 @@ APP.controller('AccountCtrl', ['API', '$scope', 'modalService', 'Notification', 
       return w.available;
     } else return w.available_btc;
   }).reduce(function (a, b) {
-    return a + b;
+    return parseFloat(a) + parseFloat(b);
   }, 0);
 
 }]);

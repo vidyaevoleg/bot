@@ -23,6 +23,7 @@ module Stat
         ['Days', day],
         ['Deals', orders.count],
         ['Winrate', winrate],
+        ['Loserate', loserate]
         ['Turnover', turnover],
         ['Turnover from Deposite, %', turnover_from_deposite],
         ['Profit', profit],
@@ -30,7 +31,7 @@ module Stat
         ['Profit With Deposit, %', profit_from_deposit],
         ['Median win ROI', median_win_roi],
         ['Median loss ROI', median_loss_roi],
-        ['Average', avarage]
+        ['Average, sec', avarage]
       ]
       data
     end
@@ -41,6 +42,10 @@ module Stat
 
     def winrate
       profit_orders.count
+    end
+
+    def loserate
+      lesion_orders.count
     end
 
     def turnover

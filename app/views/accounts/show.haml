@@ -3,8 +3,10 @@
     .row
       .col-xs-4
         %h2
-          Аккаунт {{account.provider}} #
-          {{account.id}}
+          {{account.provider}}
+          %span
+            %b
+              {{finalSum}} BTC
       .account-templates-item.col-xs{"ng-repeat"=>"template in account.templates"}
         %button.btn.btn-info{"ng-click"=>"editTemplate(template)"}
           {{template.currency}}

@@ -1,17 +1,19 @@
 module Accounts
   class SyncWallets < ::ApplicationInteraction
-    attr_reader :account
+    attr_reader :account, :saved_ids
 
     object :template, class: ::Account::Template
 
     def execute
       @account = template.account
+      @saved_ids = []
       client = account.create_client
 
       remote_wallets = client.wallets.all
       remote_wallets.each do |wallet|
         save_wallet(wallet)
       end
+      account.wallets.where.not(id: saved_ids).destroy_all
     end
 
     private
@@ -25,8 +27,10 @@ module Accounts
       }
       if wallet
         wallet.update!(attrs)
+        saved_ids << wallet.id
       else
-        account.wallets.create(attrs)
+        wallet = account.wallets.create!(attrs)
+        saved_ids << wallet.id
       end
     end
   end

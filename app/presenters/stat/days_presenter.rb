@@ -23,7 +23,7 @@ module Stat
         ['Days', day],
         ['Deals', orders.count],
         ['Winrate', winrate],
-        ['Loserate', loserate]
+        ['Loserate', loserate],
         ['Turnover', turnover],
         ['Turnover from Deposite, %', turnover_from_deposite],
         ['Profit', profit],

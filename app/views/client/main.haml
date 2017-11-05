@@ -12,14 +12,16 @@
             %a{"href"=>"{{'/accounts/' + account.id }}"}
               {{ account.provider }}
           .templates.row
-            .templates-item.col-xs-2{"ng-repeat"=>"template in account.templates"}
-              %button.btn.btn-info{"ng-click"=>"editTemplate(template)"}
+            %button.templates-item.btn.btn-info.col-xs-12{"ng-repeat"=>"template in account.templates"}
+              %a{"href"=>"/templates/{{template.id}}"}
                 {{template.currency}}
-                %span.inline{"ng-class"=>"template.need_restart ? 'text-danger' : 'text-success'"}
-                  {{template.need_restart ? 'off' : 'on'}}
-            .templates-item.col-xs-2
-              %button.btn.btn-success{ "ng-click"=>"addNewTemplate(account)"}
-                %i.fa.fa-plus-circle{"aria-hidden" => "true"}
+              %span.inline
+                %i.fa.fa-pencil{"aria-hidden" => "true", "ng-click"=>"editTemplate(template)"}
+              %span.inline{"ng-class"=>"template.need_restart ? 'text-danger' : 'text-success'"}
+                {{template.need_restart ? 'off' : 'on'}}
+            %button.templates-item.btn.btn-success.col-xs-12{ "ng-click"=>"addNewTemplate(account)"}
+              new currency config
+              %i.fa.fa-plus-circle{"aria-hidden" => "true"}
           .actions
             %span
               %a{"ng-click" => "editAccount(account)"}

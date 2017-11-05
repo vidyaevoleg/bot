@@ -1,28 +1,21 @@
 .container-fluid{"ng-controller"=>"AccountCtrl"}
   .account-templates
     .row
-      .col-xs-4
+      .col-md-6
         %h2
           {{account.provider}}
-          %span
+          %span.inline.sp-caption{"ng-repeat"=>"wallet in account.wallets"}
             %b
-              {{finalSum}} BTC
-      .account-templates-item.col-xs{"ng-repeat"=>"template in account.templates"}
-        %button.btn.btn-info{"ng-click"=>"editTemplate(template)"}
-          {{template.currency}}
+              {{wallet.available}} {{wallet.currency}};
+      .templates.row.col-md-6
+        %button.btn.btn-info.templates-item.col-xs-3{"ng-repeat"=>"template in account.templates"}
+          %a{"href"=>"/templates/{{template.id}}"}
+            {{template.currency}}
+          %span.inline
+            %a{"ng-click" => "editTemplate(template)"}
+              %i.fa.fa-pencil{"aria-hidden" => "true"}
           %span.inline{"ng-class"=>"template.need_restart ? 'text-danger' : 'text-success'"}
             {{template.need_restart ? 'off' : 'on'}}
-  .account-wallets
-    .account-wallets-item{{"ng-repeat" => "wallet in wallets"}}
-      %p
-        %b
-          {{wallet.currency}}
-        %span
-          {{wallet.available}}
-        %span{"ng-if"=>"wallet.currency != 'BTC'"}
-          %b
-            BTC
-          {{wallet.available_btc}}
   %hr
 
   %div{"ng-repeat"=>"session in sessions"}

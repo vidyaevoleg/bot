@@ -3,8 +3,8 @@ class Account < ActiveRecord::Base
   belongs_to :user
   enum provider: {bittrex: 0, poloniex: 1}
   has_many :templates, class_name: ::Account::Template, dependent: :destroy
-  has_many :wallets, class_name: ::Account::Wallet, dependent: :destroy
   has_many :sessions, class_name: ::Account::Session, through: :templates
+  has_many :wallets, through: :templates
   has_many :orders, through: :templates
 
   validates :user, presence: true

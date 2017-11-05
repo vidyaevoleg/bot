@@ -61,6 +61,8 @@ module Api
         :currency,
         :strategy,
         :account_id,
+        :white_spread_percent_max,
+        :white_spread_percent_min,
         black_list: [],
         white_list: []
       )

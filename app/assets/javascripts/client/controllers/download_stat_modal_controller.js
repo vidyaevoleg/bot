@@ -19,6 +19,9 @@ APP.controller('DownloadStatModalCtrl', ['API', '$scope', 'modalService', 'Notif
     options.to = options.to.toString();
     var sheetUrl = '/stat/' + sheet + "?" + $.param($scope.params);
     window.location.replace(sheetUrl);
-  }
+  };
+
+  $scope.closeModal = modalService.close;
+
 
 }]);

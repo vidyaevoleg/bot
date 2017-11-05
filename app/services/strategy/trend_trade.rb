@@ -7,6 +7,7 @@ class Strategy::TrendTrade < Strategy
 	}
 
 	def call
+		return if other_templates_running?
     # base_to_fiat_trend = client.charts.find("#{template.usd_string}-#{template.currency}")
 		base_to_fiat_trend = client.charts.find("USDT", template.currency, TREND[:INTERVAL_IN_MINUTES])
 		@base_to_fiat_trend_values = base_to_fiat_trend.map(&:close)

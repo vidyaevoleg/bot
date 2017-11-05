@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171031150427) do
+ActiveRecord::Schema.define(version: 20171105170451) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,15 +50,17 @@ ActiveRecord::Schema.define(version: 20171031150427) do
     t.decimal  "min_buy_percent_diff"
     t.decimal  "min_buy_price"
     t.integer  "account_id"
-    t.decimal  "min_pump_risk_percent", default: 5.0
+    t.decimal  "min_pump_risk_percent",    default: 5.0
     t.text     "black_list"
     t.text     "white_list"
     t.decimal  "white_list_coef"
     t.string   "currency"
-    t.integer  "interval",              default: 600
-    t.integer  "strategy",              default: 0
+    t.integer  "interval",                 default: 600
+    t.integer  "strategy",                 default: 0
     t.datetime "last_time"
-    t.decimal  "max_buy_percent_diff",  default: 4.0
+    t.decimal  "max_buy_percent_diff",     default: 4.0
+    t.decimal  "white_spread_percent_min", default: 4.0
+    t.decimal  "white_spread_percent_max", default: 6.0
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree
@@ -66,11 +68,9 @@ ActiveRecord::Schema.define(version: 20171031150427) do
   create_table "account_wallets", force: :cascade do |t|
     t.string  "currency"
     t.decimal "available"
-    t.decimal "available_btc"
-    t.integer "account_id"
+    t.decimal "available_currency"
+    t.integer "account_template_id"
   end
-
-  add_index "account_wallets", ["account_id"], name: "index_account_wallets_on_account_id", using: :btree
 
   create_table "accounts", force: :cascade do |t|
     t.string  "key"

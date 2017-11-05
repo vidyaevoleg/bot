@@ -15,10 +15,12 @@ class AccountTemplateSerializer < ApplicationSerializer
     :currency,
     :strategy,
     :need_restart,
-    :max_buy_percent_diff
+    :max_buy_percent_diff,
+    :white_spread_percent_max,
+    :white_spread_percent_min
 
   def need_restart
-    !object.last_time || (Time.zone.now - object.last_time > object.interval)
+    object.off?
   end
 
   def coins

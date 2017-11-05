@@ -1,13 +1,11 @@
 module Orders
   class SaveStrategyReport < ::ApplicationInteraction
-    attr_reader :account
 
     string :strategy
     object :template,  class: ::Account::Template
     array :orders, default: []
 
     def execute
-      @account = template.account
       template.reports.create(
         balance: balance,
         strategy: strategy,
@@ -20,12 +18,8 @@ module Orders
     private
 
     def balance
-      account.wallets.map do |w|
-        if w.currency == 'BTC'
-          w.available.to_f
-        else
-          w.available_btc.to_f
-        end
+      template.wallets.map do |w|
+        w.available_currency.to_f
       end.inject(&:+)
     end
 

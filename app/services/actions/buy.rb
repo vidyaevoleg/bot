@@ -65,7 +65,8 @@ module Actions
     end
 
     def in_white_list?
-      template.white_list.include?(summary.market)
+      white_spread = (summary.spread > (template.white_spread_percent_min / 100)) && (summary.spread < (template.white_spread_percent_max / 100))
+      template.white_list.include?(summary.market) || white_spread
     end
 
     def order_volume

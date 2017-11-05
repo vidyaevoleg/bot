@@ -18,7 +18,11 @@ class Bittrex::Wallet < ::Bittrex::Base
   end
 
   def sign(second_currency)
-    "#{second_currency}-#{currency}"
+    signs(second_currency).first
+  end
+
+  def signs(second_currency)
+    ["#{second_currency}-#{currency}", "#{currency}-#{second_currency}"]
   end
 
   def summary(second_currency = nil)
@@ -27,7 +31,7 @@ class Bittrex::Wallet < ::Bittrex::Base
       if @cache[cache_key]
         @cache[cache_key]
       else
-        @_summary = Bittrex::Summary.all.find {|s| s.market == sign(second_currency)}
+        @_summary = Bittrex::Summary.all.find {|s| signs(second_currency).include?(s.market)}
       end
     else
       @_summary
@@ -39,16 +43,17 @@ class Bittrex::Wallet < ::Bittrex::Base
     _summary = summary(second_currency)
 
     if !_summary
-      0
+      if second_currency == currency
+        available
+      else
+        0
+      end
     elsif usd?
       0
     else
-      balance * _summary.last
+      reverse = _summary.market.split('-').first == currency
+      reverse ? (available / _summary.last) : (available * _summary.last)
     end
-  end
-
-  def available_btc
-    available_currency('BTC')
   end
 
   private

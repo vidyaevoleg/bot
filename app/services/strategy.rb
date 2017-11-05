@@ -32,11 +32,11 @@ class Strategy
   end
 
   def call
+    return if other_templates_running?
     perform_next_run
     summaries.each do |summary|
+      next unless need_call?(summary)
       fix(summary)
-    end
-    summaries.each do |summary|
       start(summary)
     end
     perform_check
@@ -53,7 +53,6 @@ class Strategy
   end
 
   def start(summary)
-    return if our_currencies.include?(summary.market)
     wallet = summary.wallet
     if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
       Actions::Sell.new(summary, template).call do |*args|
@@ -68,6 +67,10 @@ class Strategy
 
   private
 
+  def need_call?(summary)
+    !our_currencies.include?(summary.market)
+  end
+
   def full_balance
     currency_wallet.available
   end
@@ -78,6 +81,10 @@ class Strategy
 
   def max_buy_deals_count
     (full_balance.to_d / template.min_buy_price.to_d).to_i
+  end
+
+  def other_templates_running?
+    account.templates.where.not(id: template.id).map(&:off?).include?(false)
   end
 
   def new_order(summary, type, volume, price, reason = nil)
@@ -122,12 +129,14 @@ class Strategy
 
   def our_currencies
     return @_our_currencies if @_our_currencies
-    words = template.account.templates.map {|t| "#{t.currency}"}
+    words = account.templates.map {|t| "#{t.currency}"}
     @_our_currencies = []
     words.each do |word1|
       words.reverse.each do |word2|
         @_our_currencies << "#{word1}-#{word2}"
         @_our_currencies << "#{word2}-#{word1}"
+        @_our_currencies << "#{word2}_#{word1}"
+        @_our_currencies << "#{word1}_#{word2}"
       end
     end
     @_our_currencies.uniq

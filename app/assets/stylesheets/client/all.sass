@@ -78,7 +78,7 @@ span.inline
   &-item
     max-width: 33%
     min-width: 300px
-    border: 3px solid black
+    background: #f5f5f5
     margin-right: 15px
     &-card
       cursor: pointer
@@ -90,13 +90,10 @@ span.inline
       padding: 20px
       .header
         font-size: 30px
-        font-weight: bolder
+        // font-weight: bolder
+        margin-bottom: 40px
         a
           font-weight: bolder
-      .templates
-        margin-top: 40px
-        &-item
-          margin-right: 40px
       .actions
         position: absolute
         top: 30px
@@ -104,6 +101,13 @@ span.inline
         color: $gray
         a
           margin-left: 5px
+
+.templates
+  &-item
+    margin: 0 5px 10px 5px
+    a
+      font-weight: bolder
+      color: white
 
 .session-card
   padding: 10px 0
@@ -148,12 +152,17 @@ span.inline
       a
         color: white
         font-weight: bolder
-.account-wallets
+.template-wallets
   &-item
-    font-size: 15px
+    height: 30px
+    font-size: 13px
     position: relative
     display: inline-block
     margin: 10px
     padding: 5px 10px 0 10px
     border-radius: 3px
     background: #f5f5f5
+
+.sp-caption
+  font-size: 18px
+  font-weight: lighter

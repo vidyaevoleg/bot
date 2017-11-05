@@ -12,7 +12,7 @@ module Stat
       days = options[:instances].pluck(:closed_at).compact.map(&:to_date).uniq.sort
       days_objects = []
       days.each do |day|
-        orders = options[:instances].where(closed_at: day..(day + 1.days))
+        orders = options[:instances].where(closed_at: day.beginning_of_day..day.end_of_day)
         days_objects << Struct.new(:day, :orders).new(day, orders)
       end
       super(headers: false, instances: days_objects)
@@ -22,8 +22,8 @@ module Stat
       data = [
         ['Days', day],
         ['Deals', orders.count],
-        ['Winrate', winrate],
-        ['Loserate', loserate],
+        ['Winrate, %', winrate],
+        ['Loserate, %', loserate],
         ['Turnover', turnover],
         ['Turnover from Deposite, %', turnover_from_deposite],
         ['Profit', profit],
@@ -41,11 +41,11 @@ module Stat
     end
 
     def winrate
-      profit_orders.count
+      ((profit_orders.count * 100) / (profit_orders.count + lesion_orders.count)).to_f.round(2)
     end
 
     def loserate
-      lesion_orders.count
+      ((lesion_orders.count * 100) / (profit_orders.count + lesion_orders.count)).to_f.round(2)
     end
 
     def turnover
@@ -75,11 +75,11 @@ module Stat
     end
 
     def median_win_roi
-      median(profit_orders.map(&:profit).compact)
+      median(profit_orders.map(&:profit).compact).to_f.round(8)
     end
 
     def median_loss_roi
-      median(lesion_orders.map(&:profit).compact)
+      median(lesion_orders.map(&:profit).compact).to_f.round(8)
     end
 
     def avarage

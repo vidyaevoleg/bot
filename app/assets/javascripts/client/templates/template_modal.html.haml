@@ -1,12 +1,12 @@
 .template-modal
   .modal-header
     %h4
-      Опции для валюты
+      Конфиг
       %b
         {{template.currency}}
       %span.history
         %a{"href"=>"/templates/{{template.id}}"}
-          (история)
+          (подробнее)
 
   .modal-body
     .config
@@ -38,14 +38,18 @@
         %b
           условия продажи
       .row
-        .col-xs
+        .col-xs-4
           .form-group
             %label минимальный процент перед продажей (%)
             %input.form-control{"ng-model"=>"template.min_sell_percent_diff"}
-        .col-xs
+        .col-xs-4
           .form-group
             %label если актив упал на столько (%)
             %input.form-control{"ng-model"=>"template.min_sell_percent_stop"}
+        .col-xs-4
+          .form-group
+            %label процент, предотвращающий памп при покупке (%)
+            %input.form-control{"ng-model"=>"template.min_pump_risk_percent"}
       %h5
         %b
           условия покупки
@@ -62,14 +66,23 @@
           .form-group
             %label максимальный спред (%)
             %input.form-control{"ng-model"=>"template.max_buy_percent_diff"}
-        .col-xs-6
+        .col-xs-4
           .form-group
             %label минимальная цена покупки ({{template.currency}})
             %input.form-control{"ng-model"=>"template.min_buy_price"}
-        .col-xs-6
+
+        .col-xs-4
           .form-group
-            %label процент, предотвращающий памп при покупке (%)
-            %input.form-control{"ng-model"=>"template.min_pump_risk_percent"}
+            %label нижняя граница эффективного спреда (%)
+            %input.form-control{"ng-model"=>"template.white_spread_percent_min"}
+        .col-xs-4
+          .form-group
+            %label верхняя граница эффективного спреда (%)
+            %input.form-control{"ng-model"=>"template.white_spread_percent_max"}
+
+
+
+
       %h5
         %b
           списки

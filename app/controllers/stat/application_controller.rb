@@ -4,7 +4,7 @@ module Stat
     before_action :prepare_orders
 
     def days
-      render csv: Stat::DaysPresenter.to_csv(instances: @orders), filename: "All #{Time.zone.now.to_s}"
+      render csv: Stat::DaysPresenter.to_csv(instances: @orders), filename: "Days #{Time.zone.now.to_s}"
     end
 
     def all

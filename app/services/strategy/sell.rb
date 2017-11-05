@@ -1,11 +1,11 @@
 class Strategy::Sell < Strategy
 
   def call
+    return if other_templates_running?
     perform_next_run
     summaries.each do |summary|
+      next unless need_call?(summary)
       fix(summary)
-    end
-    summaries.each do |summary|
       panic_sell(summary)
     end
     perform_check
@@ -14,7 +14,7 @@ class Strategy::Sell < Strategy
 
   # точно такой же есть в базовой стратегии
   # наверное можно отсюда убрать
-  # 
+  #
   def fix(summary)
     wallet = summary.wallet
     if wallet && wallet.available_currency(currency) > 0 && wallet.available_currency(currency) < MIN_TRADE_VOLUME

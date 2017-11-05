@@ -5,6 +5,7 @@ class Account::Template < ActiveRecord::Base
   has_many :orders, foreign_key: :account_template_id
   has_many :sessions, class_name: ::Account::Session, foreign_key: :account_template_id, dependent: :destroy
   has_many :reports, class_name: ::Account::Report, foreign_key: :account_template_id, dependent: :destroy
+  has_many :wallets, class_name: ::Account::Wallet, foreign_key: :account_template_id, dependent: :destroy
 
   serialize :black_list, Array
   serialize :white_list, Array
@@ -32,6 +33,8 @@ class Account::Template < ActiveRecord::Base
       max_buy_percent_diff: 4,
       min_buy_price: 0.0006,
       white_list_coef: 2.0,
+      white_spread_percent_max: 6.0,
+      white_spread_percent_min: 3.0,
       interval: 600
     }
   }
@@ -47,7 +50,11 @@ class Account::Template < ActiveRecord::Base
   end
 
   def coins_cache_key
-    "#{currency}_coins"
+    "#{currency}_coins_#{id}"
+  end
+
+  def off?
+    !last_time || (Time.zone.now - last_time > interval)
   end
 
   def data

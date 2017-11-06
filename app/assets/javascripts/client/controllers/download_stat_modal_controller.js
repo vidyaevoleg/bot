@@ -1,6 +1,9 @@
 APP.controller('DownloadStatModalCtrl', ['API', '$scope', 'modalService', 'Notification', function (API, $scope, modalService, Notification) {
-  // $scope.sheets = ['all', 'days', 'markets', 'spreads', 'market volumes', 'config', 'time'];
-  $scope.sheets = ['all', 'days'];
+  var scope = modalService.getScope();
+  var configs = Object.keys(scope.current_user.accounts[0].templates[0]);
+  _.remove(configs, function (c) {return ['id', '$$hashKey', 'coins', 'currency', 'need_restart', 'white_list', 'black_list'].includes(c)});
+  $scope.configs = configs;
+  $scope.sheets = ['all', 'days', 'markets', 'spreads', 'volumes', 'configs', 'times'];
 
   $scope.params = {
     from: new Date(new Date().setDate(new Date().getDate()-1)),

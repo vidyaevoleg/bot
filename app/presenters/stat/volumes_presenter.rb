@@ -1,26 +1,37 @@
 module Stat
-  class DaysPresenter < BasePresenter
-    attr_reader :orders, :day, :template
+  class VolumesPresenter < BasePresenter
+    attr_reader :orders, :volume, :template
 
-    def initialize(day_with_orders)
-      @day = day_with_orders.day
-      @orders = day_with_orders.orders
+    def initialize(volume_with_orders)
+      @volume = volume_with_orders.volume
+      @orders = volume_with_orders.orders
       @template = orders.first.template
     end
 
+    POINTS = {
+      ETH: [0, 100, 150, 200, 300, 400, 500, 750, 1000, 1500, 2000, 3000, 4000, 5000, 10000, 10000000],
+      BTC: [0, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 300, 400, 500, 1000, 10000000]
+    }
+
     def self.to_csv(options={})
-      days = options[:instances].pluck(:closed_at).compact.map(&:to_date).uniq.sort
-      days_objects = []
-      days.each do |day|
-        orders = options[:instances].where(closed_at: day.beginning_of_day..day.end_of_day)
-        days_objects << Struct.new(:day, :orders).new(day, orders)
+      buy_orders = options[:instances].where(type: 'buy')
+      volumes = buy_orders.pluck(:volume)
+      steps = POINTS[options[:currency].to_sym]
+      volumes_objects = []
+      chain_ids = buy_orders.pluck(:chain_id).uniq
+      steps.each_with_index do |step, i|
+        next_step = steps[i+1]
+        if next_step
+          orders = options[:instances].where("volume > ? AND volume < ?", step, next_step).where(chain_id: chain_ids)
+          volumes_objects << Struct.new(:volume, :orders).new(step, orders) if orders.any?
+        end
       end
-      super(headers: false, instances: days_objects)
+      super(headers: false, instances: volumes_objects)
     end
 
     def spreadsheet_columns
       data = [
-        ['Days', day],
+        ['Volumes', volume ],
         ['Deals', orders.count],
         ['Winrate, %', winrate],
         ['Loserate, %', loserate],
@@ -37,7 +48,7 @@ module Stat
     end
 
     def method_missing(*args)
-      'test'
+      nil
     end
 
     def winrate
@@ -57,14 +68,12 @@ module Stat
     end
 
     def turnover_from_deposite
-      (turnover * 100 / deposit).to_f.round(2) if deposit
+      (turnover * 100 / deposit).to_f.round(2) if turnover && deposit
     end
 
     def deposit
-      day_report = Account::Report.where(account_template_id: template.id)
-        .where("created_at > ? AND created_at < ?", day.beginning_of_day, day.end_of_day)
-        .uniq {|r| r.account_template_id}.first
-      day_report.balance if day_report
+      first_report =  Account::Report.where(account_template_id: template.id).first
+      first_report.balance if first_report
     end
 
     def roi

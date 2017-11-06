@@ -1,26 +1,26 @@
 module Stat
-  class DaysPresenter < BasePresenter
-    attr_reader :orders, :day, :template
+  class MarketsPresenter < BasePresenter
+    attr_reader :orders, :market, :template
 
-    def initialize(day_with_orders)
-      @day = day_with_orders.day
-      @orders = day_with_orders.orders
+    def initialize(market_with_orders)
+      @market = market_with_orders.market
+      @orders = market_with_orders.orders
       @template = orders.first.template
     end
 
     def self.to_csv(options={})
-      days = options[:instances].pluck(:closed_at).compact.map(&:to_date).uniq.sort
-      days_objects = []
-      days.each do |day|
-        orders = options[:instances].where(closed_at: day.beginning_of_day..day.end_of_day)
-        days_objects << Struct.new(:day, :orders).new(day, orders)
+      markets = options[:instances].pluck(:market).compact.uniq
+      markets_objects = []
+      markets.each do |market|
+        orders = options[:instances].where(market: market)
+        markets_objects << Struct.new(:market, :orders).new(market, orders)
       end
-      super(headers: false, instances: days_objects)
+      super(headers: false, instances: markets_objects)
     end
 
     def spreadsheet_columns
       data = [
-        ['Days', day],
+        ['Markets', market],
         ['Deals', orders.count],
         ['Winrate, %', winrate],
         ['Loserate, %', loserate],
@@ -37,7 +37,7 @@ module Stat
     end
 
     def method_missing(*args)
-      'test'
+      nil
     end
 
     def winrate
@@ -61,10 +61,8 @@ module Stat
     end
 
     def deposit
-      day_report = Account::Report.where(account_template_id: template.id)
-        .where("created_at > ? AND created_at < ?", day.beginning_of_day, day.end_of_day)
-        .uniq {|r| r.account_template_id}.first
-      day_report.balance if day_report
+      first_report =  Account::Report.where(account_template_id: template.id).first
+      first_report.balance if first_report
     end
 
     def roi

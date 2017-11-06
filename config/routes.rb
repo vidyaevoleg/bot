@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   end
   resources :templates, only: [:show]
-  
+
   namespace :api, defaults: {format: :json} do
     resources :accounts do
       get 'orders', on: :member
@@ -28,6 +28,11 @@ Rails.application.routes.draw do
     controller :application do
       get 'days'
       get 'all'
+      get 'markets'
+      get 'spreads'
+      get 'volumes'
+      get 'configs'
+      get 'times'
     end
   end
 

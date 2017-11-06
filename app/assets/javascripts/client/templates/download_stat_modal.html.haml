@@ -9,7 +9,7 @@
         %select.form-control{"ng-model"=>"params.currency"}
           %option{"ng-value"=>"'ETH'"} ETH
           %option{"ng-value"=>"'BTC'"} BTC
-    .col-xs-8
+    .col-xs-4
       .row
         .col-xs
           .form-group
@@ -19,11 +19,18 @@
           .form-group
             %label до
             %input.form-control{"ng-model"=>"params.to", "type"=>"date"}
+    .col-xs-4
+      .form-group
+        %label Параметр конфига
+        %select.form-control{"ng-model"=>"params.config"}
+          %option{"ng-repeat"=>"config in configs", "ng-value"=>"config"} {{config}}
+
     .sheets{"ng-class"=>"!ui.setupIsValid() && 'disabled'"}
       .sheets-block{"ng-repeat"=>"sheet in sheets"}
         %btn.btn.btn-info
           %a{"href"=>"#", "ng-click"=>"downloadSheet(sheet)"}
             {{sheet}}
+
 
 
 .modal-footer

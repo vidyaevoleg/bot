@@ -1,26 +1,33 @@
 module Stat
-  class DaysPresenter < BasePresenter
-    attr_reader :orders, :day, :template
+  class TimesPresenter < BasePresenter
+    attr_reader :orders, :time, :template
 
-    def initialize(day_with_orders)
-      @day = day_with_orders.day
-      @orders = day_with_orders.orders
+    def initialize(time_with_orders)
+      @time = time_with_orders.time
+      @orders = time_with_orders.orders
       @template = orders.first.template
     end
 
     def self.to_csv(options={})
-      days = options[:instances].pluck(:closed_at).compact.map(&:to_date).uniq.sort
-      days_objects = []
-      days.each do |day|
-        orders = options[:instances].where(closed_at: day.beginning_of_day..day.end_of_day)
-        days_objects << Struct.new(:day, :orders).new(day, orders)
+      times = options[:instances].pluck(:closed_at).compact.map(&:to_date).uniq.sort
+      times_objects = []
+      steps = [0, 300, 600, 1200, 1800, 3600, 4800, 7200, 9000, 10800, 14400, 18000, 25200, 32400, 43200, 54000, 64800, 86400]
+      steps.each_with_index do |step, i|
+        next_step = steps[i+1]
+        if next_step
+          orders = options[:instances].where.not(closed_at: nil)
+            .find_all {|o|
+              (o.closed_at - o.created_at).abs > step && (o.closed_at - o.created_at).abs < next_step
+            }
+          times_objects << Struct.new(:time, :orders).new(step, orders) if orders.any?
+        end
       end
-      super(headers: false, instances: days_objects)
+      super(headers: false, instances: times_objects)
     end
 
     def spreadsheet_columns
       data = [
-        ['Days', day],
+        ['Time, min', (time / 60)],
         ['Deals', orders.count],
         ['Winrate, %', winrate],
         ['Loserate, %', loserate],
@@ -31,7 +38,6 @@ module Stat
         ['Profit With Deposit, %', profit_from_deposit],
         ['Median win ROI', median_win_roi],
         ['Median loss ROI', median_loss_roi],
-        ['Average, sec', avarage]
       ]
       data
     end
@@ -57,14 +63,12 @@ module Stat
     end
 
     def turnover_from_deposite
-      (turnover * 100 / deposit).to_f.round(2) if deposit
+      (turnover * 100 / deposit).to_f.round(2) if turnover && deposit
     end
 
     def deposit
-      day_report = Account::Report.where(account_template_id: template.id)
-        .where("created_at > ? AND created_at < ?", day.beginning_of_day, day.end_of_day)
-        .uniq {|r| r.account_template_id}.first
-      day_report.balance if day_report
+      first_report =  Account::Report.where(account_template_id: template.id).first
+      first_report.balance if first_report
     end
 
     def roi
@@ -85,12 +89,6 @@ module Stat
 
     def median_loss_roi
       median(lesion_orders.map(&:profit).compact).to_f.round(8)
-    end
-
-    def avarage
-      good_orders = orders.find_all {|o| o.created_at && o.closed_at}
-      diffs = good_orders.map {|o| (o.closed_at - o.created_at).abs}.inject(&:+)
-      diffs / good_orders.count if diffs
     end
 
     def median(array)

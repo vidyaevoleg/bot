@@ -1,26 +1,30 @@
 module Stat
-  class DaysPresenter < BasePresenter
-    attr_reader :orders, :day, :template
+  class ConfigsPresenter < BasePresenter
+    attr_reader :orders, :config, :template
 
-    def initialize(day_with_orders)
-      @day = day_with_orders.day
-      @orders = day_with_orders.orders
+    def initialize(config_with_orders)
+      @config = config_with_orders.config
+      @orders = config_with_orders.orders
       @template = orders.first.template
     end
 
     def self.to_csv(options={})
-      days = options[:instances].pluck(:closed_at).compact.map(&:to_date).uniq.sort
-      days_objects = []
-      days.each do |day|
-        orders = options[:instances].where(closed_at: day.beginning_of_day..day.end_of_day)
-        days_objects << Struct.new(:day, :orders).new(day, orders)
+      config = options[:config]
+      return super(headers: false, instances: []) unless config
+      configs = options[:instances].find_all {|o| o.type == 'buy'}
+        .map {|o| o.send(config) if o.respond_to?(config)}.compact.uniq
+      configs_objects = []
+      chain_ids = options[:instances].map(&:chain_id).uniq
+      configs.each do |value|
+        orders = options[:instances].find_all {|o| chain_ids.include?(o.chain_id) && o.respond_to?(config) && o.send(config) == value}
+        configs_objects << Struct.new(:config, :orders).new(value, orders) if orders.any?
       end
-      super(headers: false, instances: days_objects)
+      super(headers: false, instances: configs_objects)
     end
 
     def spreadsheet_columns
       data = [
-        ['Days', day],
+        ['Config value', config],
         ['Deals', orders.count],
         ['Winrate, %', winrate],
         ['Loserate, %', loserate],
@@ -37,7 +41,7 @@ module Stat
     end
 
     def method_missing(*args)
-      'test'
+      nil
     end
 
     def winrate
@@ -57,14 +61,12 @@ module Stat
     end
 
     def turnover_from_deposite
-      (turnover * 100 / deposit).to_f.round(2) if deposit
+      (turnover * 100 / deposit).to_f.round(2) if turnover && deposit
     end
 
     def deposit
-      day_report = Account::Report.where(account_template_id: template.id)
-        .where("created_at > ? AND created_at < ?", day.beginning_of_day, day.end_of_day)
-        .uniq {|r| r.account_template_id}.first
-      day_report.balance if day_report
+      first_report =  Account::Report.where(account_template_id: template.id).first
+      first_report.balance if first_report
     end
 
     def roi

@@ -1,6 +1,6 @@
 class ClientController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_user, only: [:main]
+  before_action :set_user
 
   def main
     @accounts = Account.where(user: current_user)

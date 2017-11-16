@@ -64,6 +64,7 @@ group :development, :test do
   gem 'webmock'
 end
 
+gem 'whenever', :require => false
 gem 'unicorn'
 
 group :development do

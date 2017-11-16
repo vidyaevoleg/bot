@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171105170451) do
+ActiveRecord::Schema.define(version: 20171116202954) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,13 +49,13 @@ ActiveRecord::Schema.define(version: 20171105170451) do
     t.decimal  "min_buy_sth_diff"
     t.decimal  "min_buy_percent_diff"
     t.decimal  "min_buy_price"
+    t.integer  "interval"
     t.integer  "account_id"
     t.decimal  "min_pump_risk_percent",    default: 5.0
     t.text     "black_list"
     t.text     "white_list"
     t.decimal  "white_list_coef"
     t.string   "currency"
-    t.integer  "interval",                 default: 600
     t.integer  "strategy",                 default: 0
     t.datetime "last_time"
     t.decimal  "max_buy_percent_diff",     default: 4.0
@@ -80,6 +80,17 @@ ActiveRecord::Schema.define(version: 20171105170451) do
   end
 
   add_index "accounts", ["user_id"], name: "index_accounts_on_user_id", using: :btree
+
+  create_table "candles", force: :cascade do |t|
+    t.decimal  "min"
+    t.decimal  "max"
+    t.integer  "provider"
+    t.string   "market"
+    t.decimal  "ask"
+    t.decimal  "bid"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "orders", force: :cascade do |t|
     t.string   "type"

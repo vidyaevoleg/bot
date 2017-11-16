@@ -80,6 +80,7 @@ module Stat
     end
 
     def median_win_roi
+      roi каждого ордера (профит / объем )
       median(profit_orders.map(&:profit).compact).to_f.round(8)
     end
 

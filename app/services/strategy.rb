@@ -154,10 +154,6 @@ class Strategy
     Accounts::SyncWalletsWorker.perform_async(template.id)
   end
 
-  def sync_balances
-    Orders::SaveReportsWorker.perform_async(template.id)
-  end
-
   def perform_check
     Accounts::SessionCheckWorker.perform_in(30.seconds, session.id)
   end

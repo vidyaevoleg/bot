@@ -29,7 +29,7 @@ module Actions
     end
 
     def order_volume
-      sum = ::Strategy::MIN_TRADE_VOLUME
+      sum = template.min_buy_price
       (sum / order_rate.to_d).to_f
     end
   end

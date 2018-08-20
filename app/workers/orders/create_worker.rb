@@ -7,7 +7,6 @@ module Orders
       template = ::Account::Template.find(template_id)
       account = template.account
       client = account.create_client
-
       if Rails.env.development?
         begin
           client.markets.create!(params) do |created_order|

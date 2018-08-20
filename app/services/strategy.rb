@@ -11,11 +11,9 @@ class Strategy
   attr_accessor :used_balance
 
   STH = 0.00000001
-  MIN_TRADE_VOLUME = 0.0005
 
   def initialize(template)
     @template = template
-    sync_balances
     @account = template.account
     template.clear_workers
     @used_balance = 0.0
@@ -36,32 +34,35 @@ class Strategy
     perform_next_run
     summaries.each do |summary|
       next unless need_call?(summary)
-      fix(summary)
-      start(summary)
+      if summary.wallet
+        try_to_sell(summary)
+      else
+        try_to_buy(summary)
+      end
     end
     perform_check
     save_last_call
   end
 
-  def fix(summary)
+  def try_to_sell(summary)
     wallet = summary.wallet
-    if wallet && wallet.available_currency(currency) > 0 && wallet.available_currency(currency) < MIN_TRADE_VOLUME
+    available_currency = wallet.available_currency(currency)
+    min_trade_volume =  summary.bid * template.min_buy_price
+    if available_currency > 0 && available_currency < min_trade_volume
       Actions::BuyMore.new(summary, template, used_balance, full_balance).call do |*args|
+        new_order(*args)
+      end
+    end
+    if available_currency >= min_trade_volume
+      Actions::Sell.new(summary, template).call do |*args|
         new_order(*args)
       end
     end
   end
 
-  def start(summary)
-    wallet = summary.wallet
-    if wallet && wallet.available_currency(currency) > MIN_TRADE_VOLUME
-      Actions::Sell.new(summary, template).call do |*args|
-        new_order(*args)
-      end
-    else
-      Actions::Buy.new(summary, template, used_balance, full_balance).call do |*args|
-        new_order(*args)
-      end
+  def try_to_buy(summary)
+    Actions::Buy.new(summary, template, used_balance, full_balance).call do |*args|
+      new_order(*args)
     end
   end
 
@@ -93,6 +94,7 @@ class Strategy
       @used_balance = @used_balance.to_f + volume * price
     end
     puts "#{type} ордер  #{sign} по цене #{price} объемом #{volume} #{Time.zone.now} reason #{reason}".green
+    puts summary.inspect.yellow
     puts "USED BALANCE #{used_balance}".green
     ::Orders::CreateWorker.perform_async(template.id, session.id, {
       sign: sign,
@@ -114,10 +116,8 @@ class Strategy
   end
 
   def get_summaries
-    sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}")}
-    white_listed = sums.select {|s| template.white_list.include?(s.market)}
-    by_spread = sums.sort {|s| s.spread }
-    (white_listed + by_spread).uniq
+    sums = client.summaries.all.find_all {|s| s.market.include?("#{currency}") && !s.market.include?("USD") }
+    sums.sort_by(&:base_volume).reverse
   end
 
   def keep_wallets

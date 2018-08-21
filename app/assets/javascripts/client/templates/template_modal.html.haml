@@ -40,16 +40,16 @@
       .row
         .col-xs-4
           .form-group
-            %label минимальный процент перед продажей (%)
+            %label минимальный процент для продажей (%)
             %input.form-control{"ng-model"=>"template.min_sell_percent_diff"}
         .col-xs-4
           .form-group
-            %label если актив упал на столько (%)
+            %label стоп-лосс для продажи (%)
             %input.form-control{"ng-model"=>"template.min_sell_percent_stop"}
-        .col-xs-4
-          .form-group
-            %label процент, предотвращающий памп при покупке (%)
-            %input.form-control{"ng-model"=>"template.min_pump_risk_percent"}
+        -# .col-xs-4
+        -#   .form-group
+        -#     %label процент, предотвращающий памп при покупке (%)
+        -#     %input.form-control{"ng-model"=>"template.min_pump_risk_percent"}
       %h5
         %b
           условия покупки
@@ -71,39 +71,39 @@
             %label минимальная цена покупки ({{template.currency}})
             %input.form-control{"ng-model"=>"template.min_buy_price"}
 
-        .col-xs-4
-          .form-group
-            %label нижняя граница эффективного спреда (%)
-            %input.form-control{"ng-model"=>"template.white_spread_percent_min"}
-        .col-xs-4
-          .form-group
-            %label верхняя граница эффективного спреда (%)
-            %input.form-control{"ng-model"=>"template.white_spread_percent_max"}
+        -# .col-xs-4
+        -#   .form-group
+        -#     %label нижняя граница эффективного спреда (%)
+        -#     %input.form-control{"ng-model"=>"template.white_spread_percent_min"}
+        -# .col-xs-4
+        -#   .form-group
+        -#     %label верхняя граница эффективного спреда (%)
+        -#     %input.form-control{"ng-model"=>"template.white_spread_percent_max"}
 
 
 
 
-      %h5
-        %b
-          списки
-      .row
-        .col-xs-6
-          .form-group
-            %label
-              %b
-                вайт лист
-            %ui-select{:multiple => "multiple", "ng-model" => "template.white_list", "tagging-label"=>"(coin name)", :tagging => "", :theme => "bootstrap", :title => "Choose a coin"}
-              %ui-select-match{:placeholder => "select coin"} {{$item}}
-              %ui-select-choices{:repeat => "coin in template.coins | filter:$select.search"}
-                {{coin}}
-        .col-xs-6
-          .form-group
-            %label
-              %b блэк лист
-            %ui-select{:multiple => "multiple", "ng-model" => "template.black_list", :tagging => "", "tagging-label"=>"(coin name)", :theme => "bootstrap", :title => "Choose a coin"}
-              %ui-select-match{:placeholder => "select coin"} {{$item}}
-              %ui-select-choices{:repeat => "coin in template.coins | filter:$select.search"}
-                {{coin}}
+      -# %h5
+      -#   %b
+      -#     списки
+      -# .row
+      -#   .col-xs-6
+      -#     .form-group
+      -#       %label
+      -#         %b
+      -#           вайт лист
+      -#       %ui-select{:multiple => "multiple", "ng-model" => "template.white_list", "tagging-label"=>"(coin name)", :tagging => "", :theme => "bootstrap", :title => "Choose a coin"}
+      -#         %ui-select-match{:placeholder => "select coin"} {{$item}}
+      -#         %ui-select-choices{:repeat => "coin in template.coins | filter:$select.search"}
+      -#           {{coin}}
+      -#   .col-xs-6
+      -#     .form-group
+      -#       %label
+      -#         %b блэк лист
+      -#       %ui-select{:multiple => "multiple", "ng-model" => "template.black_list", :tagging => "", "tagging-label"=>"(coin name)", :theme => "bootstrap", :title => "Choose a coin"}
+      -#         %ui-select-match{:placeholder => "select coin"} {{$item}}
+      -#         %ui-select-choices{:repeat => "coin in template.coins | filter:$select.search"}
+      -#           {{coin}}
       %h5
         %b
           остальное
@@ -112,11 +112,11 @@
           .form-group
             %label минимальный объем рынка актива ({{template.currency}})
             %input.form-control{"ng-model"=>"template.min_market_volume"}
-
-        .col-xs
-          .form-group
-            %label вайт лист коэффициент
-            %input.form-control{"ng-model"=>"template.white_list_coef"}
+        -#
+        -# .col-xs
+        -#   .form-group
+        -#     %label вайт лист коэффициент
+        -#     %input.form-control{"ng-model"=>"template.white_list_coef"}
   .modal-footer
     .row
       .col-xs{"ng-if"=>"template.id && template.need_restart"}

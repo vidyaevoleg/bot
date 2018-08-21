@@ -4,6 +4,6 @@ output = "log/cron.log"
 #   runner "Tasks::SaveReports.call", output: output
 # end
 
-every 30.seconds do
-  runner "Candles::Save.call", output: output
+every 1.minute do
+  rake "candles:save"
 end

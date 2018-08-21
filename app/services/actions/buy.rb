@@ -15,7 +15,7 @@ module Actions
     end
 
     def call
-      [condition0, condition1, condition2, condition3].each_with_index do |condition, i|
+      [condition0, condition1, condition2, condition3, condition4].each_with_index do |condition, i|
         unless condition
           puts "#{i} invalid condition on #{summary.market}".red unless i == 0
           return
@@ -65,11 +65,10 @@ module Actions
       used_balance + (order_rate * order_volume) < max_balance
     end
     #
-    # def condition5
-    #   # проверяем спред в пределах разумного
-    #   byebug
-    #   summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
-    # end
+    def condition4
+      # проверяем спред в пределах разумного
+      summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
+    end
 
     def in_black_list?
       template.black_list.include?(summary.market)
@@ -79,18 +78,8 @@ module Actions
       (summary.bid.to_d + ::Strategy::STH.to_d).to_f
     end
 
-    def in_white_list?
-      white_spread = (summary.spread > (template.white_spread_percent_min / 100)) && (summary.spread < (template.white_spread_percent_max / 100))
-      template.white_list.include?(summary.market) || white_spread
-    end
-
     def order_volume
-      default_volume = (template.min_buy_price.to_d / order_rate.to_d).to_f
-      if in_white_list?
-        default_volume * template.white_list_coef.to_f
-      else
-        default_volume
-      end
+      (template.min_buy_price.to_d / order_rate.to_d).to_f
     end
   end
 end

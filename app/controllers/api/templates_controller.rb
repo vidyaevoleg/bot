@@ -12,7 +12,7 @@ module Api
     end
 
     def start
-      template.run_strategy
+      template.run
       render json: :ok
     end
 

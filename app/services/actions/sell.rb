@@ -13,7 +13,6 @@ module Actions
 
     def call(&block)
       if last_buy_order
-        last_price = last_buy_order.price # цена последнего ордера на покупку
         if price_grew_enough? # (ask + STH ) / last_price > на заданный процент
           yield(summary, 'sell', Order.reasons[:profit]) # ордер на продажу
         elsif (last_buy_order.price.to_d / summary.ask.to_d) > max_difference.to_d # цена уменьшилась на этот процент
@@ -25,6 +24,10 @@ module Actions
     end
 
     private
+
+    def last_price
+      last_buy_order.price # цена последнего ордера на покупку
+    end
 
     def price_grew_enough?
       ((summary.ask.to_d - STH.to_d) / last_price.to_d).to_f > min_difference

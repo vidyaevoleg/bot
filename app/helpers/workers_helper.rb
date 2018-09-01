@@ -13,7 +13,7 @@ module WorkersHelper
 
   def clear_shedule_sets
     set =  Sidekiq::ScheduledSet.new
-    sets = set.select {|k| k.klass == 'StrategyWorker' && k.args[0] == id}
+    sets = set.select {|k| k.klass == 'RunnerWorker' && k.args[0] == id}
     sets.each(&:delete)
   end
 

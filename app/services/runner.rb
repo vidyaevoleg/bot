@@ -72,7 +72,7 @@ class Runner
   def new_order(summary, type, reason = nil)
     sign = summary.market
     @used_balance = (used_balance.to_f + summary.rate * summary.volume) if type == 'buy'
-    puts "#{type} ордер  #{sign} по цене #{summary.rate} объемом #{volume} #{Time.zone.now} reason #{reason}".green
+    puts "#{type} ордер  #{sign} по цене #{summary.rate} объемом #{summary.volume} #{Time.zone.now} reason #{reason}".green
     puts "USED BALANCE #{used_balance}".green
     ::Orders::CreateWorker.perform_async(template.id, session.id, {
       sign: sign,

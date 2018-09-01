@@ -19,12 +19,14 @@
   %hr
 
   %div{"ng-repeat"=>"session in sessions"}
-    .session-card.row.empty{"ng-if"=>"(+session.buy_count + +session.sell_count) == 0 && session.status == 'completed'"}
-      .col-md-3 {{session.date}}
-      .col-md-3 {{session.strategy}}
-
-    .session-card.row{"ng-if"=>"!((+session.buy_count + +session.sell_count) == 0 && session.status == 'completed')"}
-      .col-md-3
+    .session-card.row
+      .col-md-3{"ng-if"=>"(+session.buy_count + +session.sell_count) == 0 && session.status == 'completed'"}
+        {{session.date}}
+        %p
+          strategy
+          %b
+            {{session.strategy}}
+      .col-md-3{"ng-if"=>"!((+session.buy_count + +session.sell_count) == 0 && session.status == 'completed')"}
         .session-card-header
           %h5
             {{session.date}}

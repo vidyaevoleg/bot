@@ -7,7 +7,6 @@ class AccountsController < ClientController
     sessions = [scope.last, scope.joins(:orders).includes(:template, :orders).order(id: :desc).limit(100)].flatten.uniq(&:id)
     gon.sessions = sessions.map {|s| SessionSerializer.new(s).as_json }
     gon.wallets = account.wallets.map {|w| WalletSerializer.new(w).as_json }
-
   end
 
 end

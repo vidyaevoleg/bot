@@ -22,10 +22,8 @@ class Strategy
   end
 
   def try_to_sell
-    available_currency = wallet.available_currency(currency)
-    min_trade_volume =  summary.bid * template.min_buy_price
     if available_currency > 0 && available_currency < min_trade_volume
-      try_to_buy if enough?
+      buy_more
     elsif available_currency >= min_trade_volume
       Actions::Sell.new(summary, template).call do |*args|
         yield(*args)
@@ -34,24 +32,47 @@ class Strategy
   end
 
   def try_to_buy
-    return if buy_conditions.include?(false)
-    yield(summary, 'buy' ,Order.reasons[:profit])
+    yield(summary, 'buy' , Order.reasons[:profit]) if buy?
   end
 
-  def buy_conditions
-    [enough?]
+  def buy_more
+    yield(summary, 'buy', Order.reasons[:buy_more]) if enough?
   end
 
-  def sell_conditions
-    []
+  private
+
+  def min_trade_volume
+    summary.bid * template.min_buy_price
+  end
+
+  def available_currency
+    wallet.available_currency(currency)
   end
 
   def enough?
     balance > summary.rate * summary.volume
   end
 
+  def buy?
+    buy_conditions.each_with_index do |condition, index|
+      unless condition
+        puts "invalid condition #{index}".yellow
+        return false
+      end
+    end
+    true
+  end
+
   def volume
-    wallet ? wallet.available :  (template.min_buy_price.to_d / summary.rate.to_d).to_f
+    if wallet
+      if available_currency < min_trade_volume
+        min_trade_volume
+      else
+        wallet.available
+      end
+    else
+      (template.min_buy_price.to_d / summary.rate.to_d).to_f
+    end
   end
 
   def rate

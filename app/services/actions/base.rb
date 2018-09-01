@@ -10,9 +10,7 @@ module Actions
 
     private
 
-    def market_active?
-      summary.base_volume.to_f > template.min_market_volume.to_f
-    end
+
 
   end
 end

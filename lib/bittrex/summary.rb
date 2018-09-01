@@ -2,8 +2,6 @@ class Bittrex::Summary < ::Bittrex::Base
   attr_reader :market, :high, :low, :volume, :last, :base_volume, :raw, :created_at,
     :ask, :bid, :buy_count, :sell_count, :yesterday_price
 
-  attr_accessor :wallet
-
   alias_method :vol, :volume
   alias_method :base_vol, :base_volume
 

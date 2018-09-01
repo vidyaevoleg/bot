@@ -11,7 +11,7 @@ class Account::Template < ActiveRecord::Base
   serialize :white_list, Array
   validates :currency, :account, :min_buy_price, presence: true
 
-  enum strategy: {default: 0, sell: 1, quick_sell: 2, rank_volume: 3, trend_trade: 4}
+  enum strategy: {default: 0, quick_sell: 1, deals_volume: 2}
 
   DEFAULT = {
     ETH: {
@@ -44,9 +44,8 @@ class Account::Template < ActiveRecord::Base
     create(DEFAULT[currency].merge(options).merge(currency: currency))
   end
 
-  def run_strategy
-    strategy_klass = strategy.classify
-    Strategy.const_get(strategy_klass).new(self).call
+  def run
+    Runner.new(self).call
   end
 
   def coins_cache_key

@@ -1,8 +1,6 @@
 class Poloniex::Summary < ::Poloniex::Base
   attr_reader :market, :volume, :last, :base_volume, :ask, :bid, :buy_count, :sell_count, :yesterday_price
 
-  attr_accessor :wallet
-
   def initialize(attrs = {})
     @market = attrs['MarketName']
     @volume = attrs['quoteVolume'].to_f

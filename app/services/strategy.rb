@@ -23,7 +23,7 @@ class Strategy
 
   def try_to_sell
     if available_currency > 0 && available_currency < min_trade_volume
-      buy_more
+      buy_more { |*args| yield(*args) }
     elsif available_currency >= min_trade_volume
       Actions::Sell.new(summary, template).call do |*args|
         yield(*args)

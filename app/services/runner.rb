@@ -69,16 +69,16 @@ class Runner
     account.templates.where.not(id: template.id).map(&:off?).include?(false)
   end
 
-  def new_order(summary, type, reason = nil)
+  def new_order(summary, type, price, volume, reason = nil)
     sign = summary.market
-    @used_balance = (used_balance.to_f + summary.rate * summary.volume) if type == 'buy'
-    puts "#{type} ордер  #{sign} по цене #{summary.rate} объемом #{summary.volume} #{Time.zone.now} reason #{reason}".green
+    @used_balance = (used_balance.to_f + price * volume) if type == 'buy'
+    puts "#{type} ордер  #{sign} по цене #{price} объемом #{volume} #{Time.zone.now} reason #{reason}".green
     puts "USED BALANCE #{used_balance}".green
     ::Orders::CreateWorker.perform_async(template.id, session.id, {
       sign: sign,
       type: type,
-      volume: summary.volume,
-      price: summary.rate,
+      volume: volume,
+      price: price,
     }, {
       reason: reason,
       volume: summary.base_volume,

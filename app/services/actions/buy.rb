@@ -1,9 +1,8 @@
 module Actions
   class Buy < Base
-    attr_reader :market, :provider
 
     def call
-      yield(summary, 'buy', price, volume, Order.reasons[:future])
+      yield(summary, 'buy', price, volume, reason || Order.reasons[:future])
     end
 
     private

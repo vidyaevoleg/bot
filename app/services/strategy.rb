@@ -20,17 +20,18 @@ class Strategy
 
   def try_to_sell
     if available_currency > 0 && available_currency < min_trade_volume
-      Actions::BuyMore.new(summary, template).call do |summary, type, price, volume, reason|
+      Actions::Buy.new(summary, template, Order.reasons[:buy_more]).call do |summary, type, price, volume, reason|
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
     elsif available_currency >= min_trade_volume
-      if grew_enough?
-        Actions::Sell.new(summary, template).call do |*args|
+      if order_not_found? || stop_loss?
+        reason = order_not_found? ? Order.reasons[:too_long] : Order[:stop_loss]
+        Actions::Sell.new(summary, template, reason).call do |*args|
           yield(args)
         end
       end
-      if stop_loss?
-        Actions::StopLoss.new(summary, template).call do |*args|
+      if grew_enough?
+        Actions::Sell.new(summary, template).call do |*args|
           yield(args)
         end
       end
@@ -47,6 +48,10 @@ class Strategy
 
   private
 
+  def order_not_found?
+    !last_buy_order
+  end
+
   def min_trade_volume
     summary.bid * template.min_buy_price
   end
@@ -60,6 +65,7 @@ class Strategy
   end
 
   def grew_enough?
+    last_price = last_buy_order.price
     ((summary.ask.to_d - STH.to_d) / last_price.to_d).to_f > 1.to_f + (template.min_sell_percent_stop.to_f / 100.to_f)
   end
 

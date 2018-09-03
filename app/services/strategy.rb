@@ -24,16 +24,13 @@ class Strategy
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
     elsif available_currency >= min_trade_volume
-      if order_not_found? || stop_loss?
-        reason = order_not_found? ? Order.reasons[:too_long] : Order[:stop_loss]
-        Actions::Sell.new(summary, template, reason).call do |*args|
-          yield(args)
-        end
+      reason = if order_not_found?
+        Order.reasons[:too_long]
+      elsif stop_loss?
+        Order[:stop_loss]
       end
-      if grew_enough?
-        Actions::Sell.new(summary, template).call do |*args|
-          yield(args)
-        end
+      Actions::Sell.new(summary, template, reason).call do |*args|
+        yield(*args)
       end
     end
   end

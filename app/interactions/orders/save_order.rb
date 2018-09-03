@@ -19,11 +19,9 @@ module Orders
     def execute
       client = account.create_client
       @remote_order = client.remote_orders.find(uuid)
+      @local_order = template.orders.find_by(uuid: uuid) || template.orders.build
 
-      @local_order = template.orders.find_by(uuid: uuid)
-      @local_order ||= template.orders.build unless local_order
-
-      attrs = {
+      attrs = options.merge(
         market: remote_order.market,
         quantity: remote_order.quantity,
         type: remote_order.type,
@@ -34,17 +32,10 @@ module Orders
         session_id: session.id,
         profit: profit,
         closed_at: remote_order.closed_at
-      }
-
-      options.each do |key, value|
-        attrs.merge!(Hash[key, value]) if value
-      end
-
+      )
       attrs.merge!(chain_id: chain_id) unless completed?
       attrs.merge!(template_data: template.data) if completed?
-
-      local_order.assign_attributes(attrs)
-      local_order.save!
+      local_order.update_attributes(attrs)
     end
 
     private

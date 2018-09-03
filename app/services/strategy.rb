@@ -19,7 +19,7 @@ class Strategy
   end
 
   def try_to_sell
-    if available_currency > 0 && available_currency < min_trade_volume
+    if available_currency > 0 && (available_currency < min_trade_volume) && valid_spread?
       Actions::Buy.new(summary, template, Order.reasons[:buy_more]).call do |summary, type, price, volume, reason|
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
@@ -44,6 +44,10 @@ class Strategy
   end
 
   private
+
+  def valid_spread?
+    summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
+  end
 
   def order_not_found?
     !last_buy_order

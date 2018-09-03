@@ -25,11 +25,4 @@ class Strategy::Default < Strategy
     # last_candle.ask > avg
     # return true
   end
-
-  def valid_spread?
-    # проверяем спред в пределах разумного
-    summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
-  end
-
-
 end

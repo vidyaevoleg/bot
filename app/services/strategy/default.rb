@@ -17,9 +17,9 @@ class Strategy::Default < Strategy
   end
 
   def fast_grow?
-    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(7)
+    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(6)
     last_candle = candles.first
-    other_candles = candles.reverse.first(6)
+    other_candles = candles.reverse.first(5)
     # avg = other_candles.map(&:ask).inject(&:+) / other_candles.size
     last_candle.ask > other_candles.map(&:ask).max
     # last_candle.ask > avg

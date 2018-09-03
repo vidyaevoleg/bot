@@ -9,11 +9,11 @@ module Actions
     private
 
     def volume
-      (template.min_buy_price.to_d / summary.rate.to_d).to_f
+      (template.min_buy_price.to_d / price).to_f
     end
 
     def price
-      (summary.ask.to_d + STH.to_d).to_f
+      (summary.bid.to_d + STH.to_d).to_f
     end
   end
 end

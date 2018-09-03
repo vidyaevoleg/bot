@@ -46,7 +46,7 @@ class Strategy
   private
 
   def valid_spread?
-    summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
+    summary.spread > 0.01 && summary.spread < 0.20
   end
 
   def order_not_found?

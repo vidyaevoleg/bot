@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171116202954) do
+ActiveRecord::Schema.define(version: 20180903234250) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,16 +51,10 @@ ActiveRecord::Schema.define(version: 20171116202954) do
     t.decimal  "min_buy_price"
     t.integer  "interval"
     t.integer  "account_id"
-    t.decimal  "min_pump_risk_percent",    default: 5.0
-    t.text     "black_list"
-    t.text     "white_list"
-    t.decimal  "white_list_coef"
     t.string   "currency"
-    t.integer  "strategy",                 default: 0
+    t.integer  "strategy",              default: 0
     t.datetime "last_time"
-    t.decimal  "max_buy_percent_diff",     default: 4.0
-    t.decimal  "white_spread_percent_min", default: 4.0
-    t.decimal  "white_spread_percent_max", default: 6.0
+    t.decimal  "max_buy_percent_diff",  default: 4.0
   end
 
   add_index "account_templates", ["account_id"], name: "index_account_templates_on_account_id", using: :btree

@@ -10,10 +10,7 @@ class Strategy::Default < Strategy
 
   def valid_spread_percent?
     # проверяем спред в процентах
-    min_percent = template.min_buy_percent_diff.to_d / 100.to_d
-    spread_diff = ((summary.ask.to_d - STH.to_d) / (summary.bid.to_d + STH.to_d))
-    puts "spread diff #{spread_diff}, need #{1 + min_percent}"
-    spread_diff > 1 + min_percent
+    summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
   end
 
   def fast_grow?

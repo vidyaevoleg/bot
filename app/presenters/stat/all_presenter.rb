@@ -30,10 +30,8 @@ module Stat
         ['min_market_volume', order.template_data[:min_market_volume]],
         ['min_sell_percent_diff', order.template_data[:min_sell_percent_diff]],
         ['min_sell_percent_stop', order.template_data[:min_sell_percent_stop]],
-        ['min_buy_sth_diff', order.template_data[:min_buy_sth_diff]],
         ['min_buy_percent_diff', order.template_data[:min_buy_percent_diff]],
         ['min_buy_price', order.template_data[:min_buy_price]],
-        ['white_list_coef', order.template_data[:white_list_coef]],
         ['currency', order.template_data[:currency]],
         ['strategy', order.template_data[:strategy]]
       ]

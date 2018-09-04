@@ -53,18 +53,12 @@ module Api
         :min_sell_percent_stop,
         :min_buy_percent_diff,
         :max_buy_percent_diff,
-        :min_buy_sth_diff,
         :min_buy_price,
         :min_pump_risk_percent,
         :interval,
-        :white_list_coef,
         :currency,
         :strategy,
         :account_id,
-        :white_spread_percent_max,
-        :white_spread_percent_min,
-        black_list: [],
-        white_list: []
       )
     end
 

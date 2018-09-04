@@ -18,23 +18,18 @@ class Account::Template < ActiveRecord::Base
       min_market_volume: 20,
       min_sell_percent_diff: 1,
       min_sell_percent_stop: 7,
-      min_buy_sth_diff: 100,
       min_buy_percent_diff: 2,
+      max_buy_percent_diff: 4,
       min_buy_price: 0.0006,
-      white_list_coef: 2.0,
       interval: 600
     },
     BTC: {
       min_market_volume: 20,
       min_sell_percent_diff: 1,
       min_sell_percent_stop: 7,
-      min_buy_sth_diff: 100,
       min_buy_percent_diff: 2,
       max_buy_percent_diff: 4,
       min_buy_price: 0.0006,
-      white_list_coef: 2.0,
-      white_spread_percent_max: 6.0,
-      white_spread_percent_min: 3.0,
       interval: 600
     }
   }

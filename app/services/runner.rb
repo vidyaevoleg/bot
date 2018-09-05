@@ -74,18 +74,11 @@ class Runner
     @used_balance = (used_balance.to_f + price * volume) if type == 'buy'
     puts "#{type} ордер  #{sign} по цене #{price} объемом #{volume} #{Time.zone.now} reason #{reason}".green
     puts "USED BALANCE #{used_balance}".green
-    ::Orders::CreateWorker.perform_async(template.id, session.id, {
+    ::Orders::CreateWorker.perform_async(session.id, reason, {
       sign: sign,
       type: type,
       volume: volume,
       price: price,
-    }, {
-      reason: reason,
-      volume: summary.base_volume,
-      spread: summary.spread,
-      sell_count: summary.sell_count,
-      buy_count: summary.buy_count,
-      yesterday_price: summary.yesterday_price
     })
   end
 

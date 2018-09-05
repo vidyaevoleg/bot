@@ -1,7 +1,7 @@
 class Strategy::Default < Strategy
 
   def buy_conditions
-    [market_active?, valid_spread?, valid_spread_percent?, fast_grow?]
+    [market_active?, valid_spread?, valid_spread_percent?]
   end
 
   def market_active?

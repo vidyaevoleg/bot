@@ -27,7 +27,7 @@ class Strategy
       reason = if order_not_found?
         Order.reasons[:too_long]
       elsif stop_loss?
-        Order[:stop_loss]
+        Order.reasons[:stop_loss]
       end
       Actions::Sell.new(summary, template, reason).call do |*args|
         yield(*args)

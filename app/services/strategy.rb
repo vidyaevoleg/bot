@@ -20,14 +20,14 @@ class Strategy
 
   def try_to_sell
     if available_currency > 0 && (available_currency < min_trade_volume) && valid_spread?
-      Actions::Buy.new(summary, template, Order.reasons[:buy_more]).call do |summary, type, price, volume, reason|
+      Actions::Buy.new(summary, template, :buy_more).call do |summary, type, price, volume, reason|
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
     elsif available_currency >= min_trade_volume
       reason = if order_not_found?
-        Order.reasons[:too_long]
+        :too_long
       elsif stop_loss?
-        Order[:stop_loss]
+        :stop_loss
       end
       Actions::Sell.new(summary, template, reason).call do |*args|
         yield(*args)

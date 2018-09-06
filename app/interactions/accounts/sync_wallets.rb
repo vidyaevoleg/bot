@@ -8,8 +8,7 @@ module Accounts
       @account = template.account
       @saved_ids = []
       client = account.create_client
-
-      remote_wallets = client.wallets.all.find_all {|w| w.available > 0}
+      remote_wallets = client.wallets.all.find_all {|w| w.balance > 0}
       remote_wallets.each do |wallet|
         save_wallet(wallet)
       end
@@ -22,16 +21,15 @@ module Accounts
       wallet = template.wallets.find_by(currency: remote_wallet.currency)
       attrs = {
         currency: remote_wallet.currency,
-        available: remote_wallet.available,
+        available: remote_wallet.balance,
         available_currency: remote_wallet.available_currency(template.currency)
       }
       if wallet
         wallet.update!(attrs)
-        saved_ids << wallet.id
       else
         wallet = template.wallets.create!(attrs)
-        saved_ids << wallet.id
       end
+      saved_ids << wallet.id
     end
   end
 end

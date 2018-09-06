@@ -4,13 +4,14 @@ module Orders
     object :order, class: Order
 
     def execute
+      account = order.template.account
       client = account.create_client
       remote = client.remote_orders.find(order.uuid)
       order.update!(
         status: :completed,
-        commission: remote.commission
+        commission: remote.commission,
+        profit: order.sell? ? profit : 0
       )
-      order.update!(profit: profit) if order.sell?
       self
     end
 

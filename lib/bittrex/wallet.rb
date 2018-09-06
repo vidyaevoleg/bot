@@ -44,7 +44,7 @@ class Bittrex::Wallet < ::Bittrex::Base
 
     if !_summary
       if second_currency == currency
-        available
+        balance
       else
         0
       end
@@ -52,7 +52,7 @@ class Bittrex::Wallet < ::Bittrex::Base
       0
     else
       reverse = _summary.market.split('-').first == currency
-      reverse ? (available / _summary.last) : (available * _summary.last)
+      reverse ? (balance / _summary.last) : (balance * _summary.last)
     end
   end
 

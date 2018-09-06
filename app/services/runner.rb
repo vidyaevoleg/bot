@@ -95,12 +95,6 @@ class Runner
     summaries.each do |summary|
       wallet = wallets.find { |w| w.sign(template.currency) == summary.market }
       summary.define_singleton_method :wallet, -> { wallet }
-      summary.define_singleton_method :order_rate do
-        wallet ? (summary.ask.to_d - STH.to_d).to_f : (summary.ask.to_d + STH.to_d).to_f
-      end
-      summary.define_singleton_method :order_volume do
-        wallet ? wallet.available : (template.min_buy_price.to_d / summary.order_rate.to_d).to_f
-      end
     end
     Accounts::SyncWalletsWorker.perform_async(template.id)
   end

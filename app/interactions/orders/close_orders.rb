@@ -12,17 +12,10 @@ module Orders
           remote_order.close!
           order.destroy!
         else
-          if session
-            Orders::SaveOrder.run(template: template, session: session, uuid: order.uuid)
-            session.add_count(order.type)
-          else
-            order.destroy
-          end
+          Success.run!(order: order)
         end
       end
-      if session
-        session.update(status: 'completed')
-      end
+      session.update(status: 'completed') if session
     end
 
     private

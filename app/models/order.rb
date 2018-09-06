@@ -6,4 +6,12 @@ class Order < ActiveRecord::Base
   enum reason: {profit: 0, stop_loss: 1, buy_more: 2, future: 3, too_long: 4, panic_sell: 5}
   serialize :template_data, Hash
 
+  def sell?
+    type == 'sell'
+  end
+
+  def buy?
+    !sell?
+  end
+
 end

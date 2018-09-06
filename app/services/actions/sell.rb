@@ -8,7 +8,7 @@ module Actions
     private
 
     def volume
-      summary.wallet.available
+      summary.wallet.balance
     end
 
     def price

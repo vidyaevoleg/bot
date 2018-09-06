@@ -19,7 +19,7 @@ module Candles
           ask: summary.ask,
           bid: summary.bid,
         }
-        Candle.create!(attrs)
+        Candle.create!(attrs) if summary.ask && summary.bid
       end
     end
   end

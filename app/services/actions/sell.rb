@@ -2,7 +2,7 @@ module Actions
   class Sell < Base
 
     def call
-      yield(summary, 'sell', price, volume, reason || Order.reasons[:profit])
+      yield(summary, 'sell', price, volume, reason || :profit)
     end
 
     private

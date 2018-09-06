@@ -2,7 +2,7 @@ module Actions
   class Buy < Base
 
     def call
-      yield(summary, 'buy', price, volume, reason || Order.reasons[:future])
+      yield(summary, 'buy', price, volume, reason || :future)
     end
 
     private

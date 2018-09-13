@@ -11,7 +11,7 @@ class Strategy
   end
 
   def call
-    if summary.wallet
+    if summary.wallet && summary.wallet.balance > 0
       try_to_sell { |*args| yield(*args) }
     else
       try_to_buy { |*args| yield(*args) }
@@ -19,11 +19,11 @@ class Strategy
   end
 
   def try_to_sell
-    if available_currency > 0 && (available_currency < min_trade_volume) && valid_spread?
+    if available_currency > 0 && (available_currency < 0.99 * template.min_buy_price)
       Actions::Buy.new(summary, template, :buy_more).call do |summary, type, price, volume, reason|
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
-    elsif available_currency >= min_trade_volume
+    elsif available_currency >= template.min_buy_price
       reason = if order_not_found?
         :too_long
       elsif stop_loss?
@@ -38,6 +38,7 @@ class Strategy
   def try_to_buy
     if reason_to_buy?
       Actions::Buy.new(summary, template).call do |summary, type, price, volume, reason|
+        # byebug
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
     end
@@ -54,7 +55,7 @@ class Strategy
   end
 
   def min_trade_volume
-    summary.bid * template.min_buy_price
+    template.min_buy_price / summary.bid
   end
 
   def available_currency

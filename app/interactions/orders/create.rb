@@ -19,7 +19,7 @@ module Orders
           reason: reason,
           session: session,
           market: remote.market,
-          quantity: remote.quantity,
+          quantity: params[:volume] * params[:price],
           type: remote.type,
           commission: remote.commission,
           sell_count: summary.sell_count,
@@ -35,15 +35,18 @@ module Orders
     end
 
     def chain_id
-      if reason.to_s == 'buy_more'
-      elsif reason.to_s == 'buy'
+      if reason.to_s == 'future'
         SecureRandom.hex(8)
-      elsif remote.type == 'sell'
-        order = Order.order(id: :desc).find_by(
+      elsif reason.to_s == 'buy_more'
+        Order.order(id: :desc).find_by(
           account_template_id: template.id,
           market: remote.market,
-          reason: [:buy, :buy_more])
-        order&.chain_id
+          reason: :buy)&.chain_id
+      elsif remote.type == 'sell'
+        Order.order(id: :desc).find_by(
+          account_template_id: template.id,
+          market: remote.market,
+          reason: [:buy, :buy_more])&.chain_id
       end
     end
 

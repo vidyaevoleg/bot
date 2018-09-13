@@ -32,6 +32,8 @@ gem 'colorize'
 gem 'angular-rails-templates', '~> 1.0.2'
 gem "bower-rails", "~> 0.11.0"
 gem "font-awesome-rails"
+gem "faye-websocket"
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -65,7 +67,6 @@ group :development, :test do
 end
 
 gem 'whenever', :require => false
-gem 'unicorn'
 
 group :development do
   gem 'web-console', '~> 2.0'

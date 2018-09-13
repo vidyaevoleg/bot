@@ -1,7 +1,7 @@
 class Strategy::Default < Strategy
 
   def buy_conditions
-    [market_active?, valid_spread?, valid_spread_percent?]
+    [market_active?, valid_spread?, valid_spread_percent?, fast_grow?]
   end
 
   def market_active?
@@ -14,11 +14,15 @@ class Strategy::Default < Strategy
   end
 
   def fast_grow?
-    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(6)
+    nums = 6
+    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(nums)
     last_candle = candles.first
-    other_candles = candles.reverse.first(5)
+    other_candles = candles.reverse.first(nums-1)
     # avg = other_candles.map(&:ask).inject(&:+) / other_candles.size
-    last_candle.ask > other_candles.map(&:ask).max
+    if last_candle.ask > other_candles.map(&:ask).max
+      puts "current #{last_candle.ask} #{last_candle.created_at} more then #{other_candles.map(&:ask)}".green
+      return true
+    end
     # last_candle.ask > avg
     # return true
   end

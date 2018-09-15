@@ -15,12 +15,16 @@ class Strategy::Default < Strategy
 
   def fast_grow?
     nums = 6
-    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(nums)
+    candles = []
+    Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).find_each do |c|
+      break if candles.size == nums
+      candles << c.ask unless candles.include?(c.ask)
+    end
     last_candle = candles.first
     other_candles = candles.reverse.first(nums-1)
     # avg = other_candles.map(&:ask).inject(&:+) / other_candles.size
-    if last_candle.ask > other_candles.map(&:ask).max
-      puts "current #{last_candle.ask} #{last_candle.created_at} more then #{other_candles.map(&:ask)}".green
+    if last_candle > other_candles.max
+      puts "current #{last_candle.to_f} more then #{other_candles.map(&:to_f)}".green
       return true
     end
     # last_candle.ask > avg

@@ -65,22 +65,28 @@
               %span
                 | quantity - {{order.quantity}}
               %span
-                | reason - {{order.reason }}
+                | price - {{order.price }}
+              %span
+                | volume - {{(order.price * order.quantity).toFixed(9) }}
+
+            %p{"ng-if"=>"session.status == 'completed'"}
+              %span
+                %b
+                  | reason - {{order.reason }}
+
+              %span{"ng-if"=>"order.type == 'sell' && order.profit", "ng-class"=>"order.profit > 0 ? 'text-success' : 'text-danger'"}
+                %b
+                  profit - {{ order.profit }}
+              %span
+                | commission - {{order.commission }} |
+              %span
+                | spread - {{order.spread}}
+            %p
               %span
                 | buy_count - {{order.sell_count }}
               %span
                 | sell_count - {{order.buy_count }}
               %span
                 | yesterday_price - {{order.yesterday_price }}
-            %p{"ng-if"=>"session.status == 'completed'"}
-              %span{"ng-if"=>"order.type == 'sell' && order.profit", "ng-class"=>"order.profit > 0 ? 'text-success' : 'text-danger'"}
-                %b
-                  profit - {{ order.profit }}
               %span
-                | price - {{order.price }} |
-              %span
-                | commission - {{order.commission }} |
-              %span
-                | spread - {{order.spread}}
-              %span{}
-                | volume - {{order.volume}}
+                | market volume - {{order.volume}}

@@ -19,7 +19,7 @@ module Orders
           reason: reason,
           session: session,
           market: remote.market,
-          quantity: params[:volume] * params[:price],
+          quantity: params[:volume],
           type: remote.type,
           commission: remote.commission,
           sell_count: summary.sell_count,
@@ -41,12 +41,13 @@ module Orders
         Order.order(id: :desc).find_by(
           account_template_id: template.id,
           market: remote.market,
-          reason: :buy)&.chain_id
+          reason: Order.reasons[:buy])&.chain_id
       elsif remote.type == 'sell'
+        reasons = [Order.reasons[:buy], Order.reasons[:buy_more]]
         Order.order(id: :desc).find_by(
           account_template_id: template.id,
           market: remote.market,
-          reason: [:buy, :buy_more])&.chain_id
+          reason: reasons)&.chain_id
       end
     end
 

@@ -8,7 +8,7 @@ module Actions
     private
 
     def volume
-      (template.min_buy_price.to_d / price).to_f
+      (2 * template.min_buy_price.to_d / price).to_f
     end
 
     def price

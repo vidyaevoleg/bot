@@ -19,7 +19,7 @@ class Strategy
   end
 
   def try_to_sell
-    if available_currency > 0 && (available_currency < 0.99 * template.min_buy_price)
+    if summary.wallet.balance * summary.bid < template.min_buy_price
       Actions::Buy.new(summary, template, :buy_more).call do |summary, type, price, volume, reason|
         yield(summary, type, price, volume, reason) if price * volume < balance
       end

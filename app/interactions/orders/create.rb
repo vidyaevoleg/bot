@@ -41,9 +41,9 @@ module Orders
         Order.order(id: :desc).find_by(
           account_template_id: template.id,
           market: remote.market,
-          reason: Order.reasons[:buy])&.chain_id
+          reason: Order.reasons[:future])&.chain_id
       elsif remote.type == 'sell'
-        reasons = [Order.reasons[:buy], Order.reasons[:buy_more]]
+        reasons = [Order.reasons[:future], Order.reasons[:buy_more]]
         Order.order(id: :desc).find_by(
           account_template_id: template.id,
           market: remote.market,

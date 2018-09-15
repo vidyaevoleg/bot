@@ -23,14 +23,20 @@ class Strategy
       Actions::Buy.new(summary, template, :buy_more).call do |summary, type, price, volume, reason|
         yield(summary, type, price, volume, reason) if price * volume < balance
       end
-    elsif available_currency >= template.min_buy_price
+    else
       reason = if order_not_found?
         :too_long
       elsif stop_loss?
         :stop_loss
       end
-      Actions::Sell.new(summary, template, reason).call do |*args|
-        yield(*args)
+      if reason
+        Actions::Sell.new(summary, template, reason).call do |*args|
+          yield(*args)
+        end
+      elsif last_buy_order.price * (1 + template.min_sell_percent_diff / 100) > summary.bid
+        Actions::Sell.new(summary, template).call do |*args|
+          yield(*args)
+        end
       end
     end
   end

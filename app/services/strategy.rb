@@ -33,7 +33,7 @@ class Strategy
         Actions::Sell.new(summary, template, reason).call do |*args|
           yield(*args)
         end
-      elsif last_buy_order.price * (1 + template.min_sell_percent_diff / 100) > summary.bid
+      elsif last_buy_order.price * (1 + template.min_sell_percent_diff / 100) > summary.last
         Actions::Sell.new(summary, template).call do |*args|
           yield(*args)
         end

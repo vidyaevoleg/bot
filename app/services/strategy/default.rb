@@ -14,12 +14,12 @@ class Strategy::Default < Strategy
   end
 
   def fast_grow?
-    nums = 7
-    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(nums).map(&:value)
+    nums = 6
+    candles = Candle.where(provider: template.account.provider, market: summary.market).order(id: :desc).limit(nums)
     last_candle = candles.first
     other_candles = candles.reverse.first(nums-1)
     # avg = other_candles.map(&:ask).inject(&:+) / other_candles.size
-    if last_candle > other_candles.max
+    if last_candle.min > other_candles.map(&:min).max && last_candle.max > other_candles.map(&:max).max
       puts "current #{last_candle.to_f} more then #{other_candles.map(&:to_f)}".green
       return true
     end

@@ -28,13 +28,11 @@ class Strategy
         :too_long
       elsif stop_loss?
         :stop_loss
+      elsif grew_enough?
+        :profit
       end
       if reason
         Actions::Sell.new(summary, template, reason).call do |*args|
-          yield(*args)
-        end
-      elsif ((summary.last - last_buy_order.price) / summary.last) > (1 + template.min_sell_percent_diff / 100)
-        Actions::Sell.new(summary, template).call do |*args|
           yield(*args)
         end
       end

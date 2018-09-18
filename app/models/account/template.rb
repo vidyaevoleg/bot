@@ -11,7 +11,7 @@ class Account::Template < ActiveRecord::Base
   serialize :white_list, Array
   validates :currency, :account, :min_buy_price, presence: true
 
-  enum strategy: {default: 0, only_sell: 1, deals_volume: 2}
+  enum strategy: {default: 0, only_sell: 1, deals_volume: 2, lines: 3}
 
   DEFAULT = {
     ETH: {

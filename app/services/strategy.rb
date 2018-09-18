@@ -81,6 +81,15 @@ class Strategy
       type: 'buy').last
   end
 
+  def market_active?
+    summary.base_volume.to_f > template.min_market_volume.to_f
+  end
+
+  def valid_spread_percent?
+    # проверяем спред в процентах
+    summary.spread > (template.min_buy_percent_diff / 100) && summary.spread < (template.max_buy_percent_diff / 100)
+  end
+
   def reason_to_buy?
     buy_conditions.each_with_index do |condition, index|
       unless condition

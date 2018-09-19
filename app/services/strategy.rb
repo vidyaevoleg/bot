@@ -78,7 +78,8 @@ class Strategy
   def last_buy_order
     @last_buy_order ||= account.orders.where(
       market: summary.market,
-      type: 'buy').last
+      type: 'buy',
+      reason: Order.reasons[:future]).last
   end
 
   def market_active?

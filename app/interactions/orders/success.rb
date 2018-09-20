@@ -10,7 +10,11 @@ module Orders
       order.update!(
         status: :completed,
         commission: remote.commission,
-        profit: order.sell? ? profit : 0
+        volume: remote.quantity * remote.price,
+        quantity: remote.quantity
+      )
+      order.update!(
+        profit: order.sell? ? profit : 0,
       )
       self
     end

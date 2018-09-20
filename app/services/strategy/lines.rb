@@ -15,6 +15,7 @@ class Strategy::Lines < Strategy
 
   def line_coef(data)
     linefit = LineFit.new
+    data = data.sort {|a, b| a.created_at.to_i <=> b.created_at.to_i }
     x = data.map(&:created_at).map(&:to_i)
     y = data.map(&:bid).map(&:to_f)
     linefit.setData(x,y)

@@ -4,11 +4,13 @@ class Strategy::Lines < Strategy
   end
 
   def lineup?
+
     candles = Candle.where(market: summary.market, provider: account.provider)
       .where("created_at > ?", 15.minutes.ago).order(id: :desc)
-    groups = [candles.last(5), candles.last(10).first(5), candles.first(5)]
+    nums = 10
+    groups = [candles.last(nums), candles.last(nums).first(nums), candles.first(nums)]
     coefs = groups.map {|group| line_coef(group)}
-    coefs.last == coefs.max
+    coefs.last == coefs.max && coefs.last > 0
   end
 
   def line_coef(data)

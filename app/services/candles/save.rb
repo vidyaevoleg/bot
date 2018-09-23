@@ -9,7 +9,7 @@ module Candles
     end
 
     def call
-      Candle.where("created_at < ?", 1.hour.ago).destroy_all
+      Candle.where("created_at < ?", 1.day.ago).destroy_all
       summaries.each do |summary|
         attrs = {
           provider: provider_name,

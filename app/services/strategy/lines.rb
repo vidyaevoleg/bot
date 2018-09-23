@@ -4,10 +4,10 @@ class Strategy::Lines < Strategy
   end
 
   def lineup?
-    global_trend? &&
-      coefs.last(3) == coefs.last(3).sort &&
+    answer = coefs.last(3) == coefs.last(3).sort &&
       coefs.select {|c| c < 0}.any? &&
       coefs.last > 0
+    answer
   end
 
   def global_trend?

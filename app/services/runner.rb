@@ -27,7 +27,7 @@ class Runner
 
   def call
     template.clear_workers
-    close_orders
+    close_orders unless Rails.env.development?
     save_coins
     keep_wallets
     perform_next_run

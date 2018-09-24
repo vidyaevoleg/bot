@@ -12,7 +12,7 @@ class Strategy
 
   def call
     if summary.wallet && summary.wallet.balance > 0
-      try_to_sell { |*args| yield(*args) }
+      try_to_sell { |*args| yield(*args) } unless Rails.env.development?
     else
       try_to_buy { |*args| yield(*args) }
     end
